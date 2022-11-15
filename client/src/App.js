@@ -10,7 +10,6 @@ import ErrorBoundary from "./views/components/ErrorBoundary/ErrorBoundary";
 import Routes from "./views/routes/Routes";
 import Spinner from "./views/components/Spinner/Spinner";
 
-
 function App() {
   return (
     <ErrorBoundary>
@@ -22,7 +21,18 @@ function App() {
             </Suspense>
           </div>
         </Router>
-        <ToastContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme="light"
+        />
       </div>
     </ErrorBoundary>
   );

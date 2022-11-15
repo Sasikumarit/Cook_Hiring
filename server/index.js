@@ -23,7 +23,7 @@ const conn = mysql.createConnection({
   host: 'localhost',
   user: 'nodejs',
   password: 'nodejs',
-  database: 'myproject'
+  database: 'cookhiringsql'
 });
 
 conn.connect((err) =>{
@@ -34,15 +34,16 @@ conn.connect((err) =>{
 
 
 /**
- * Get All Users
+ * Get All user_details
  *
  * @return response()
  */
- app.get('/api/users',(req, res) => {
+ app.get('/user/login',(req, res) => {
   let sqlQuery = "SELECT * FROM user_details";
   
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
+    console.log(apiResponse(results))
     res.send(apiResponse(results));
   });
 });
@@ -52,9 +53,8 @@ conn.connect((err) =>{
  *
  * @return response()
  */
-app.get('/api/users/:id',(req, res) => {
-  let sqlQuery = "SELECT * FROM user_details WHERE id=" + req.params.id;
-    
+app.post('/user/login',(req, res) => {
+  let sqlQuery = "SELECT * FROM user_details WHERE email='" + req.body.email+"' and  password='" + req.body.password+"'" ;
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
     res.send(apiResponse(results));
@@ -66,10 +66,10 @@ app.get('/api/users/:id',(req, res) => {
  *
  * @return response()
  */
-app.post('/api/users',(req, res) => {
-  let data = {title: req.body.email, body: req.body.password};
+app.post('/api/user_details',(req, res) => {
+  let data = {email: req.body.email, password: req.body.password};
   
-  let sqlQuery = "INSERT INTO users SET ?";
+  let sqlQuery = "INSERT INTO user_details SET ?";
   
   let query = conn.query(sqlQuery, data,(err, results) => {
     if(err) throw err;
@@ -82,8 +82,8 @@ app.post('/api/users',(req, res) => {
  *
  * @return response()
  */
-app.put('/api/users/:id',(req, res) => {
-  let sqlQuery = "UPDATE users SET email='"+req.body.email+"', password='"+req.body.password+"' WHERE id="+req.params.id;
+app.put('/api/user_details/:id',(req, res) => {
+  let sqlQuery = "UPDATE user_details SET email='"+req.body.email+"', password='"+req.body.password+"' WHERE id="+req.params.id;
   
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
@@ -96,7 +96,7 @@ app.put('/api/users/:id',(req, res) => {
  *
  * @return response()
  */
-app.delete('/api/users/:id',(req, res) => {
+app.delete('/api/user_details/:id',(req, res) => {
   let sqlQuery = "DELETE FROM user_details WHERE id="+req.params.id+"";
     
   let query = conn.query(sqlQuery, (err, results) => {

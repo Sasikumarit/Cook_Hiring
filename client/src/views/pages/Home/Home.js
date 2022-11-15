@@ -5,7 +5,7 @@ const Home = () => {
   const [serverRequest, setServerRequest] = React.useState(null);
 
   React.useEffect(() => {
-    Axios.get(  process.env.REACT_APP_ServerHost + "api/users",).then((response) => {
+    Axios.get(  process.env.REACT_APP_ServerHost + "user/login",).then((response) => {
       setServerRequest(response.data.response);
     });
   }, []);
