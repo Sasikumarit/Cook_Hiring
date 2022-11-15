@@ -5,8 +5,8 @@ const Home = () => {
   const [serverRequest, setServerRequest] = React.useState(null);
 
   React.useEffect(() => {
-    Axios.get(  process.env.REACT_APP_ServerHost + "api",).then((response) => {
-      setServerRequest(response.data.message);
+    Axios.get(  process.env.REACT_APP_ServerHost + "api/users",).then((response) => {
+      setServerRequest(response.data.response);
     });
   }, []);
 
@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <div>
      <h1>Sample Project</h1>
-    <h5> {serverRequest}</h5>
+    <h5> {JSON.stringify(serverRequest)}</h5>
     </div>
   );
 };
