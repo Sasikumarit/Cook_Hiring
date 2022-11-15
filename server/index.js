@@ -32,12 +32,6 @@ conn.connect((err) =>{
 });
 
 
-// Handle GET requests to /api route
-// app.get("/api", (req, res) => {
-//   res.json({ message: "Hello from server!" });
-// });
-
-
 
 /**
  * Get All Users
@@ -45,7 +39,7 @@ conn.connect((err) =>{
  * @return response()
  */
  app.get('/api/users',(req, res) => {
-  let sqlQuery = "SELECT * FROM users";
+  let sqlQuery = "SELECT * FROM user_details";
   
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
@@ -59,7 +53,7 @@ conn.connect((err) =>{
  * @return response()
  */
 app.get('/api/users/:id',(req, res) => {
-  let sqlQuery = "SELECT * FROM users WHERE id=" + req.params.id;
+  let sqlQuery = "SELECT * FROM user_details WHERE id=" + req.params.id;
     
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
@@ -103,7 +97,7 @@ app.put('/api/users/:id',(req, res) => {
  * @return response()
  */
 app.delete('/api/users/:id',(req, res) => {
-  let sqlQuery = "DELETE FROM users WHERE id="+req.params.id+"";
+  let sqlQuery = "DELETE FROM user_details WHERE id="+req.params.id+"";
     
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
