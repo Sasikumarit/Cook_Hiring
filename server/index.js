@@ -73,7 +73,7 @@ app.get('/api/users/:id',(req, res) => {
  * @return response()
  */
 app.post('/api/users',(req, res) => {
-  let data = {title: req.body.title, body: req.body.body};
+  let data = {title: req.body.email, body: req.body.password};
   
   let sqlQuery = "INSERT INTO users SET ?";
   
@@ -89,7 +89,7 @@ app.post('/api/users',(req, res) => {
  * @return response()
  */
 app.put('/api/users/:id',(req, res) => {
-  let sqlQuery = "UPDATE users SET title='"+req.body.title+"', body='"+req.body.body+"' WHERE id="+req.params.id;
+  let sqlQuery = "UPDATE users SET email='"+req.body.email+"', password='"+req.body.password+"' WHERE id="+req.params.id;
   
   let query = conn.query(sqlQuery, (err, results) => {
     if(err) throw err;
