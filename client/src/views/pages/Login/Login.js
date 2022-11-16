@@ -122,7 +122,7 @@ const Login = () => {
           Log in
         </Button>
         <p>
-        Not a user ?<a href="/register"> Signup</a>
+        Not a user?<a href="/register">Signup</a>
         </p>
       </div>
     </div>
