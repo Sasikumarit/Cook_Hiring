@@ -7,6 +7,9 @@ const PageNotFound = lazy(() => import('../pages/PageNotFound/PageNotFound'))
 const Home = lazy(() => import('../pages/Home/Home'))
 const Login = lazy(() => import('../pages/Login/Login'))
 const Register=lazy(()=>import('../pages/Register/Register'))
+const AdminDashboard=lazy(()=>import('../pages/Admin/AdminDashboard'))
+const CustomerDashboard=lazy(()=>import('../pages/Customer/CustomerDashboard'))
+const JobSeekerDashboard=lazy(()=>import('../pages/JobSeeker/JobSeekerDashboard'))
 
 const Routes = () => {
   return (
@@ -15,6 +18,9 @@ const Routes = () => {
         <Route  path="/home" component={Home} />
         <Route exact path="/" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/admindashboard" component={AdminDashboard} />
+        <Route path="/customerdashboard" component={CustomerDashboard} />
+        <Route path="/jobseekerdashboard" component={JobSeekerDashboard} />
         <Route path="/404" component={PageNotFound} />
         <Redirect to="/404" />
       </Switch>

@@ -16,7 +16,8 @@ import AdbIcon from '@mui/icons-material/Adb';
 const pages = ['Dashboard', 'Applied Jobs', 'Jobs Posted'];
 const settings = ['Profile','Logout'];
 
-function AdminDashboard() {
+const AdminDashboard =(props)=> {
+    console.log("props",props)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 

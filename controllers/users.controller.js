@@ -13,13 +13,12 @@ exports.create = (req, res) => {
 
   // Create a User
   const user = new User({
-    userid: req.bodyuserid,
-    username: req.bodyusername,
-    email: req.bodyemail,
-    mobileno: req.bodymobileno,
-    password: req.bodypassword,
-    confirmpassword: req.bodyconfirmpassword,
-    userrole: req.bodyuserrole,
+    username: req.body.username,
+    email: req.body.email,
+    mobileno: req.body.mobileno,
+    password: req.body.password,
+    confirmpassword: req.body.confirmpassword,
+    userrole: req.body.userrole,
   });
 
   // Save User in the database
@@ -29,7 +28,11 @@ exports.create = (req, res) => {
         status: 500,
         error: err.message || "Some error occurred while creating the User.",
       });
-    else res.send(data);
+    else res.send({
+      status: 200,
+      error: null,
+      response: "Created Successfully",
+    });
   });
 };
 
@@ -43,7 +46,11 @@ exports.findAll = (req, res) => {
         status: 500,
         error: err.message || "Some error occurred while retrieving users.",
       });
-    else res.send(data);
+    else res.send({
+      status: 200,
+      error: null,
+      response: data,
+    });
   });
 };
 
@@ -84,11 +91,49 @@ exports.findOne = (req, res) => {
   });
 };
 
+// Find a single User by Id
+exports.findLoginUser = (req, res) => {
+  User.findLogin(req.body.email,req.body.password, (err, results) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          status: 404,
+          error: `Not found User with id ${req.params.id}.`,
+        });
+      } else {
+        res.status(500).send({
+          status: 500,
+          error: "Error retrieving User with id " + req.params.id,
+        });
+      }
+    } else {
+      if (results.length !== 0) {
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+        let data = {
+          time: Date(),
+          userId: results.userId,
+        };
+        const token = jwt.sign(data, jwtSecretKey);
+        res.send({
+          status: 200,
+          error: null,
+          response: { ...results, token: token },
+        });
+      } else {
+        return res
+          .status(404)
+          .send({ status: 404, error: "Please Check Email and Password." });
+      }
+    }
+  });
+};
+
 // Update a User identified by the id in the request
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
     res.status(400).send({
+      status:400,
       error: "Content can not be empty!",
     });
   }
@@ -116,10 +161,12 @@ exports.delete = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
+          status:404,
           error: `Not found User with id ${req.params.id}.`,
         });
       } else {
         res.status(500).send({
+          status:500,
           error: "Could not delete User with id " + req.params.id,
         });
       }
@@ -137,6 +184,7 @@ exports.deleteAll = (req, res) => {
   User.removeAll((err, data) => {
     if (err)
       res.status(500).send({
+        status:500,
         error: err.message || "Some error occurred while removing all users.",
       });
     else

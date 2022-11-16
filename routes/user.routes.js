@@ -12,6 +12,10 @@ module.exports = app => {
         // Retrieve a single Tutorial with id
     router.get("/:id", users.findOne);
   
+     // Retrieve a single Tutorial with id
+     router.post("/login", users.findLoginUser);
+  
+
     // Update a Tutorial with id
     router.put("/:id", users.update);
   
@@ -21,5 +25,5 @@ module.exports = app => {
     // Delete all Tutorials
     router.delete("/", users.deleteAll);
   
-    app.use('/api/users', router);
+    app.use('/users', router);
   };

@@ -2,7 +2,7 @@ const sql = require("./db.js");
 
 // constructor
 const User = function(user) {
-  this.userid=user.userid;
+  //this.userid=user.userid;
   this.username=user.username;
   this.email=user.email;
   this.mobileno=user.mobileno;
@@ -18,14 +18,32 @@ User.create = (newUser, result) => {
       result(err, null);
       return;
     }
-
-    //console.log("created user: ", { userid: res.insertId, ...newUser });
-    result(null, { userid: res.insertId, ...newUser });
+   //console.log("created user: ", { userid: res.insertId, ...newUser });
+    result(null, {...newUser });
   });
 };
 
 User.findById = (id, result) => {
   sql.query(`SELECT * FROM user_details WHERE userid = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found user: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found User with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+User.findLogin = (email,password, result) => {
+  sql.query(`SELECT * FROM user_details WHERE email = '${email}' and password = '${password}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

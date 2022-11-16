@@ -4,12 +4,15 @@ import CustomInput from "../../components/CustomInput/CustomInput";
 import Button from "../../components/Button/Button";
 import { toast } from "react-toastify";
 import _ from "lodash";
+import { useHistory } from "react-router-dom";
+import { Roles } from "../../util/Roles";
 
 import "../../../styles/styles.css";
 
 const Login = () => {
   const initialState = { email: "", password: "" };
   const [state, setState] = useState(initialState);
+  const history= useHistory();
 
   const handleChange = (e) => {
     setState({ ...state, [e.currentTarget.id]: e.currentTarget.value });
@@ -29,11 +32,12 @@ const Login = () => {
       _.isEmpty(state.password) === false
     ) {
       document.getElementById("btn_login").disabled = true;
-      Axios.post(process.env.REACT_APP_ServerHost + `user/login`, state)
+      Axios.post(process.env.REACT_APP_ServerHost + `users/login`, state)
         .then((response) => {
-          if (response?.data?.response.length !== 0) {
+          if (response?.data?.response) {
+            localStorage.setItem('currentUser', JSON.stringify(response.data.response));
             toast.success(
-              response?.data?.response[0]?.username + " Login Successful",
+              response.data.response.username + " Login Successful",
               {
                 position: "top-right",
                 autoClose: 5000,
@@ -46,7 +50,17 @@ const Login = () => {
               }
             );
             setState(initialState);
-          } else {
+              if(response.data.response.userrole.toLowerCase()===Roles.Admin.toLowerCase() ){
+                 history.push({pathname:'/admindashboard',state:{...response.data.response}})
+              }
+              else if(response.data.response.userrole.toLowerCase()===Roles.Customer.toLowerCase()){
+                history.push({pathname:'/customerdashboard',state:{...response.data.response}})
+              }
+              else if(response.data.response.userrole.toLowerCase()===Roles.Cook.toLowerCase()){
+                history.push({pathname:'/jobseekerdashboard',state:{...response.data.response}})
+              }
+          
+        } else {
             toast.error("Please check Email and Password", {
               position: "top-right",
               autoClose: 5000,
