@@ -4,8 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import Spinner from '../components/Spinner/Spinner'
 
 const PageNotFound = lazy(() => import('../pages/PageNotFound/PageNotFound'))
-const Home = lazy(() => import('../pages/Home/Home'))
-const Login = lazy(() => import('../pages/Login/Login'))
+const LoginPage = lazy(() => import('../pages/LoginPage/LoginPage'))
 const Register=lazy(()=>import('../pages/Register/Register'))
 const AdminDashboard=lazy(()=>import('../pages/Admin/AdminDashboard'))
 const CustomerDashboard=lazy(()=>import('../pages/Customer/CustomerDashboard'))
@@ -15,8 +14,7 @@ const Routes = () => {
   return (
     <React.Suspense fallback={<Spinner />}>
       <Switch>
-        <Route  path="/home" component={Home} />
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={LoginPage} />
         <Route path="/register" component={Register} />
         <Route path="/admindashboard" component={AdminDashboard} />
         <Route path="/customerdashboard" component={CustomerDashboard} />

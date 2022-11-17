@@ -9,7 +9,7 @@ import { Roles } from "../../util/Roles";
 
 import "../../../styles/styles.css";
 
-const Login = () => {
+const LoginPage = () => {
   const initialState = { email: "", password: "" };
   const [state, setState] = useState(initialState);
   const history= useHistory();
@@ -144,4 +144,4 @@ const Login = () => {
 };
 
 
-export default Login;
+export default LoginPage;
