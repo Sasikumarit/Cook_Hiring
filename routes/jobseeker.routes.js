@@ -1,24 +1,27 @@
 module.exports = (app) => {
   const jobseeker = require("../controllers/jobseeker.controller.js");
-  
+
   var router = require("express").Router();
 
-  // Create a new Tutorial
+  // Create a new Jobseeker
   router.post("/", jobseeker.create);
 
-  // Retrieve all Tutorials
+  // Retrieve all Jobseekers
   router.get("/", jobseeker.findAll);
 
-  // Retrieve a single Tutorial with id
+  // Retrieve a single Jobseeker with id
   router.get("/:id", jobseeker.findOne);
 
-   // Update a Tutorial with id
+  // Retrieve a single Jobs with id
+  router.get("/findAppliedUser/:applieduserid", jobseeker.findAppliedUserById);
+
+  // Update a Jobseeker with id
   router.put("/:id", jobseeker.update);
 
-  // Delete a Tutorial with id
+  // Delete a Jobseeker with id
   router.delete("/:id", jobseeker.delete);
 
-  // Delete all Tutorials
+  // Delete all Jobseekers
   router.delete("/", jobseeker.deleteAll);
 
   app.use("/jobseeker", router);

@@ -74,7 +74,7 @@ exports.findOne = (req, res) => {
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         let data = {
           time: Date(),
-          userId: results.userId,
+          id: results.id,
         };
         const token = jwt.sign(data, jwtSecretKey);
         res.send({
@@ -111,7 +111,7 @@ exports.findLoginUser = (req, res) => {
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         let data = {
           time: Date(),
-          userId: results.userId,
+          id: results.id,
         };
         const token = jwt.sign(data, jwtSecretKey);
         res.send({

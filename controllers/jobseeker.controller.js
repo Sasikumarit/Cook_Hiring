@@ -12,11 +12,13 @@ exports.create = (req, res) => {
 
   // Create a Jobseeker
   const jobseeker = new Jobseeker({
-    jobseekername: req.body.jobseekername,
-    wageperday: req.body.wageperday,
-    location: req.body.location,
-    fromdate: req.body.fromdate,
-    todate: req.body.todate,
+    id:req.body.id,
+    jobseekername:req.body.jobseekername,
+    location:req.body.location,
+    mobileno:req.body.mobileno,
+    email:req.body.email,
+    yearofxp:req.body.yearofxp ,
+    applieduserid:req.body.applieduserid   
   });
 
   // Save Jobseeker in the database
@@ -36,9 +38,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database (with condition).
 exports.findAll = (req, res) => {
-  const jobseekername = req.query.jobseekername;
+  const id = req.query.id;
 
-  Jobseeker.getAll(jobseekername, (err, data) => {
+  Jobseeker.getAll(id, (err, data) => {
     if (err)
       res.status(500).send({
         status: 500,
@@ -72,6 +74,30 @@ exports.findOne = (req, res) => {
           status: 200,
           error: null,
           response: results,
+        });
+  });
+};
+
+// Find a findUser
+exports.findAppliedUserById = (req, res) => {
+  Jobseeker.findAppliedUserId(req.params.applieduserid, (err, results) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          status: 404,
+          error: `Not found job with applieduserid ${req.params.applieduserid}.`,
+        });
+      } else {
+        res.status(500).send({
+          status: 500,
+          error: "Error retrieving job with applieduserid " + req.params.applieduserid,
+        });
+      }
+    }
+        res.send({
+          status: 200,
+          error: null,
+          response:results,
         });
   });
 };

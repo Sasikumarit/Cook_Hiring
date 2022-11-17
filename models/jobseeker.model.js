@@ -8,6 +8,7 @@ const Jobseeker = function(jobseeker) {
   this.mobileno = jobseeker.mobileno;
   this.email = jobseeker.email;
   this.yearofxp = jobseeker.yearofxp;
+  this.applieduserid = jobseeker.applieduserid;
 };
 
 Jobseeker.create = (newJobseeker, result) => {
@@ -41,11 +42,31 @@ Jobseeker.findById = (id, result) => {
   });
 };
 
-Jobseeker.getAll = (jobseekername, result) => {
+Jobseeker.findAppliedUserId = (applieduserid, result) => {
+  sql.query(`SELECT * FROM job_seeker WHERE applieduserid = ${applieduserid}`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found job: ", res[0]);
+      result(null, res);
+      return;
+    }
+
+    // not found Job with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+
+Jobseeker.getAll = (id, result) => {
   let query = "SELECT * FROM job_seeker";
 
-  if (jobseekername) {
-    query += ` WHERE jobseekername '%${jobseekername}%'`;
+  if (id) {
+    query += ` WHERE id '%${id}%'`;
   }
 
   sql.query(query, (err, res) => {
@@ -62,13 +83,14 @@ Jobseeker.getAll = (jobseekername, result) => {
 
 Jobseeker.updateById = (id, jobseeker, result) => {
   sql.query(
-    "UPDATE job_seeker SET jobseekername = ?, location = ?, mobileno = ?,  email = ?, yearofxp = ? WHERE id = ?",
+    "UPDATE job_seeker SET jobseekername = ?, location = ?, mobileno = ?,  email = ?, yearofxp = ?,applieduserid=? WHERE id = ?",
     [
       jobseeker.jobseekername,
       jobseeker.location,
       jobseeker.mobileno,
       jobseeker.email,
       jobseeker.yearofxp,
+      jobseeker.applieduserid,
       id,
     ],
     (err, res) => {

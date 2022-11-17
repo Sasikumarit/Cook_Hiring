@@ -2,18 +2,19 @@ const sql = require("./db.js");
 
 // constructor
 const Jobs = function (job) {
-  this.jobid = job.jobid;
+  this.id = job.id;
   this.jobdescription = job.jobdescription;
   this.wageperday = job.wageperday;
   this.location = job.location;
   this.fromdate = job.fromdate;
   this.todate = job.todate;
+  this.userid = job.userid;
 };
 
 Jobs.create = (newJob, result) => {
   sql.query("INSERT INTO jobs SET ?", newJob, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+     // console.log("error: ", err);
       result(err, null);
       return;
     }
@@ -25,7 +26,7 @@ Jobs.create = (newJob, result) => {
 Jobs.findById = (id, result) => {
   sql.query(`SELECT * FROM jobs WHERE id = ${id}`, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       result(err, null);
       return;
     }
@@ -41,16 +42,35 @@ Jobs.findById = (id, result) => {
   });
 };
 
-Jobs.getAll = (job, result) => {
+Jobs.findUserId = (userid, result) => {
+  sql.query(`SELECT * FROM jobs WHERE userid = ${userid}`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found job: ", res[0]);
+      result(null, res);
+      return;
+    }
+
+    // not found Job with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Jobs.getAll = (id, result) => {
   let query = "SELECT * FROM jobs";
 
-  if (job) {
-    query += ` WHERE jobid '%${job}%'`;
+  if (id) {
+    query += ` WHERE id '%${id}%'`;
   }
 
   sql.query(query, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       result(null, err);
       return;
     }
@@ -62,18 +82,19 @@ Jobs.getAll = (job, result) => {
 
 Jobs.updateById = (id, job, result) => {
   sql.query(
-    "UPDATE jobs SET jobdescription = ?, wageperday = ?, location = ?,  fromdate = ?, todate = ? WHERE jobid = ?",
+    "UPDATE jobs SET jobdescription = ?, wageperday = ?, location = ?,  fromdate = ?, todate = ?,userid=? WHERE id = ?",
     [
       job.jobdescription,
       job.wageperday,
       job.location,
       job.fromdate,
       job.todate,
+      job.userid,
       id,
     ],
     (err, res) => {
       if (err) {
-        console.log("error: ", err);
+        // console.log("error: ", err);
         result(null, err);
         return;
       }
@@ -85,7 +106,7 @@ Jobs.updateById = (id, job, result) => {
       }
 
       // console.log("updated jobs: ", { id: id, ...job });
-      result(null, { id: id, ...job });
+      result(null,job);
     }
   );
 };
@@ -93,7 +114,7 @@ Jobs.updateById = (id, job, result) => {
 Jobs.remove = (id, result) => {
   sql.query("DELETE FROM jobs WHERE id = ?", id, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       result(null, err);
       return;
     }
@@ -112,7 +133,7 @@ Jobs.remove = (id, result) => {
 Jobs.removeAll = (result) => {
   sql.query("DELETE FROM jobs", (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      // console.log("error: ", err);
       result(null, err);
       return;
     }

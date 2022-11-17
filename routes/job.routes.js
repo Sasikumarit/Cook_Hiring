@@ -3,22 +3,25 @@ module.exports = (app) => {
   
     var router = require("express").Router();
   
-    // Create a new Tutorial
+    // Create a new Job
     router.post("/", jobs.create);
   
-    // Retrieve all Tutorials
+    // Retrieve alls Job
     router.get("/", jobs.findAll);
   
-    // Retrieve a single Tutorial with id
+    // Retrieve a single Job with id
     router.get("/:id", jobs.findOne);
-  
-     // Update a Tutorial with id
+
+    // Retrieve a single Job with id
+    router.get("/findUser/:userid", jobs.findUser);
+    
+     // Update a Job with id
     router.put("/:id", jobs.update);
   
-    // Delete a Tutorial with id
+    // Delete a Job with id
     router.delete("/:id", jobs.delete);
   
-    // Delete all Tutorials
+    // Delete all Jobs
     router.delete("/", jobs.deleteAll);
   
     app.use("/jobs", router);

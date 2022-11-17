@@ -13,11 +13,13 @@ exports.create = (req, res) => {
 
   // Create a Job
   const job = new Jobs({
+    id:req.body.id,
     jobdescription: req.body.jobdescription,
     wageperday: req.body.wageperday,
     location: req.body.location,
     fromdate: req.body.fromdate,
     todate: req.body.todate,
+    userid:req.body.userid
   });
 
   // Save Job in the database
@@ -38,9 +40,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Jobs from the database (with condition).
 exports.findAll = (req, res) => {
-  const email = req.query.email;
+  const id = req.query.id;
 
-  Jobs.getAll(email, (err, data) => {
+  Jobs.getAll(id, (err, data) => {
     if (err)
       res.status(500).send({
         status: 500,
@@ -70,62 +72,36 @@ exports.findOne = (req, res) => {
           error: "Error retrieving job with id " + req.params.id,
         });
       }
-    } else {
-      if (results.length !== 0) {
-        let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        let data = {
-          time: Date(),
-          jobId: results.jobId,
-        };
-        const token = jwt.sign(data, jwtSecretKey);
+    }
         res.send({
           status: 200,
           error: null,
-          response: { ...results, token: token },
+          response:results,
         });
-      } else {
-        return res
-          .status(404)
-          .send({ status: 404, error: "Please Check Email and Password." });
-      }
-    }
   });
 };
 
-// Find a single Job by Id
-exports.findLoginjob = (req, res) => {
-  Jobs.findLogin(req.body.email, req.body.password, (err, results) => {
+// Find a findUser
+exports.findUser = (req, res) => {
+  Jobs.findUserId(req.params.userid, (err, results) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
           status: 404,
-          error: `Not found job with id ${req.params.id}.`,
+          error: `Not found job with userid ${req.params.userid}.`,
         });
       } else {
         res.status(500).send({
           status: 500,
-          error: "Error retrieving job with id " + req.params.id,
+          error: "Error retrieving job with userid " + req.params.userid,
         });
       }
-    } else {
-      if (results.length !== 0) {
-        let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        let data = {
-          time: Date(),
-          userId: results.userId,
-        };
-        const token = jwt.sign(data, jwtSecretKey);
+    }
         res.send({
           status: 200,
           error: null,
-          response: { ...results, token: token },
+          response:results,
         });
-      } else {
-        return res
-          .status(404)
-          .send({ status: 404, error: "Please Check Email and Password." });
-      }
-    }
   });
 };
 
