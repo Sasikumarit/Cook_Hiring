@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const Jobseeker = function (jobseeker) {
+const Jobseeker = function(jobseeker) {
   this.id = jobseeker.id;
   this.jobseekername = jobseeker.jobseekername;
   this.location = jobseeker.location;
@@ -17,8 +17,8 @@ Jobseeker.create = (newJobseeker, result) => {
       result(err, null);
       return;
     }
-    //console.log("created jobseeker: ", { id: res.insertId, ...newJobseeker });
-    result(null, { ...newJobseeker });
+   //console.log("created jobseeker: ", { userid: res.insertId, ...newJobseeker });
+    result(null, {...newJobseeker });
   });
 };
 
@@ -31,40 +31,21 @@ Jobseeker.findById = (id, result) => {
     }
 
     if (res.length) {
-      //console.log("found user: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found User with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Jobseeker.findLogin = (email, result) => {
-  sql.query(`SELECT * FROM job_seeker WHERE email = '${email}'`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
       //console.log("found jobseeker: ", res[0]);
       result(null, res[0]);
       return;
     }
 
-    // not found JobSeeker with the id
+    // not found Jobseeker with the id
     result({ kind: "not_found" }, null);
   });
 };
 
-Jobseeker.getAll = (email, result) => {
+Jobseeker.getAll = (jobseekername, result) => {
   let query = "SELECT * FROM job_seeker";
 
-  if (email) {
-    query += ` WHERE title email '%${email}%'`;
+  if (jobseekername) {
+    query += ` WHERE jobseekername '%${jobseekername}%'`;
   }
 
   sql.query(query, (err, res) => {
@@ -74,7 +55,7 @@ Jobseeker.getAll = (email, result) => {
       return;
     }
 
-    //console.log("job_seeker: ", res);
+    //console.log("user_details: ", res);
     result(null, res);
   });
 };
@@ -103,7 +84,7 @@ Jobseeker.updateById = (id, jobseeker, result) => {
         return;
       }
 
-      // console.log("updated jobseeker: ", { id: id, ...jobseeker });
+     // console.log("updated jobseeker: ", { id: id, ...jobseeker });
       result(null, { id: id, ...jobseeker });
     }
   );
@@ -123,12 +104,12 @@ Jobseeker.remove = (id, result) => {
       return;
     }
 
-    //console.log("deleted user with id: ", id);
+    //console.log("deleted jobseeker with id: ", id);
     result(null, res);
   });
 };
 
-Jobseeker.removeAll = (result) => {
+Jobseeker.removeAll = result => {
   sql.query("DELETE FROM job_seeker", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -136,7 +117,7 @@ Jobseeker.removeAll = (result) => {
       return;
     }
 
-    //console.log(`deleted ${res.affectedRows} job_seeker`);
+    //console.log(`deleted ${res.affectedRows} user_details`);
     result(null, res);
   });
 };

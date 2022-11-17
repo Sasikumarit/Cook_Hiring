@@ -12,10 +12,7 @@ module.exports = (app) => {
     // Retrieve a single Tutorial with id
     router.get("/:id", jobs.findOne);
   
-    // Retrieve a single Tutorial with id
-    router.post("/login", jobs.findLoginUser);
-  
-    // Update a Tutorial with id
+     // Update a Tutorial with id
     router.put("/:id", jobs.update);
   
     // Delete a Tutorial with id

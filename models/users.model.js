@@ -65,7 +65,7 @@ User.getAll = (email, result) => {
   let query = "SELECT * FROM user_details";
 
   if (email) {
-    query += ` WHERE title email '%${email}%'`;
+    query += ` WHERE email '%${email}%'`;
   }
 
   sql.query(query, (err, res) => {

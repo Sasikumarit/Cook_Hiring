@@ -41,30 +41,11 @@ Jobs.findById = (id, result) => {
   });
 };
 
-Jobs.findLogin = (email, result) => {
-  sql.query(`SELECT * FROM jobs WHERE email = '${email}'`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      //console.log("found jobs: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Jobs with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Jobs.getAll = (email, result) => {
+Jobs.getAll = (job, result) => {
   let query = "SELECT * FROM jobs";
 
-  if (email) {
-    query += ` WHERE title email '%${email}%'`;
+  if (job) {
+    query += ` WHERE jobid '%${job}%'`;
   }
 
   sql.query(query, (err, res) => {
