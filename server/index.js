@@ -22,6 +22,8 @@ app.use(express.urlencoded({ extended: true })); /* bodyParser.urlencoded() is d
 
 
 require("../routes/user.routes.js")(app);
+require("../routes/job.routes.js")(app);
+require("../routes/jobseeker.routes.js")(app);
 
 // All other GET requests not handled before will return our React app
 app.get("*", (req, res) => {
