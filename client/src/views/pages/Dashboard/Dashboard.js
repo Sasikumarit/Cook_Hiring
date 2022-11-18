@@ -118,6 +118,7 @@ const Dashboard = (props) => {
 
   return (
     <>
+    <div className="dashboard">
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -246,7 +247,7 @@ const Dashboard = (props) => {
         <h1>Jobs Data</h1>
         <CustomDataGrid columns={jobState.columns} rows={jobState.rows} />
       </div>
-
+</div>
     </>
   );
 };

@@ -25,3 +25,8 @@ body {
 .form .form__custom-button {
   margin-top: 50px;
 }
+
+body .dashboard{
+  background: #fefffe;
+  height: 47rem;
+}
