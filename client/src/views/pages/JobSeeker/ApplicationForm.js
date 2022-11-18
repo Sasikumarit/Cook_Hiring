@@ -36,4 +36,4 @@ function ApplicationForm() {
   );
 }
 
-export default ApplicationForm
+export default ApplicationForm;
