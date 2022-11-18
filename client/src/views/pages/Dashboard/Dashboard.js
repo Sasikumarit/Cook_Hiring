@@ -139,7 +139,7 @@ const Dashboard = (props) => {
   }, []);
 
   React.useEffect(() => {
-    async function fetch() {
+    async function jobfetch() {
       await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
         if (res.status === 200) {
           dispatch({
@@ -151,8 +151,21 @@ const Dashboard = (props) => {
         return res;
       });
     }
-    fetch();
-  }, []);
+
+    function adminfetch(){}
+    function cookfetch(){}
+
+   if(user?.userrole.toLowerCase() ===
+        Roles.Admin.toLowerCase()){ adminfetch()}
+
+     if(user?.userrole.toLowerCase() ===
+        Roles.Cook.toLowerCase()) { cookfetch()}
+
+  if(user?.userrole.toLowerCase() ===
+        Roles.Customer.toLowerCase()){  jobfetch()}
+
+   
+  }, [user]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

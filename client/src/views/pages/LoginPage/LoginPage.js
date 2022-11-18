@@ -34,19 +34,6 @@ const LoginPage = () => {
         .then((response) => {
           if (response?.data?.response) {
             localStorage.setItem('currentUser', JSON.stringify(response.data.response));
-            toast.success(
-              response.data.response.username + " Login Successful",
-              {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
             setState(initialState);
             history.push({pathname:'/dashboard',state:{...response.data.response}})
           
