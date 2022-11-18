@@ -85,6 +85,13 @@ const Dashboard = (props) => {
   });
   const [adminState, setAdminState] = React.useState({ columns: [], rows: [] });
 
+React.useEffect(()=>{
+   if(!history.location.state){
+    localStorage.removeItem("currentUser");
+    history.push("/");
+   }
+})
+
   React.useEffect(() => {
     async function fetch() {
       await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
