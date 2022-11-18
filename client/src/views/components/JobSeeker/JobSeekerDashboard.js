@@ -73,6 +73,22 @@ const JobSeekerDashboard = (props) => {
         width: 110,
         editable: true,
       },
+
+      {
+        renderCell: (cellValues) => {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              // onClick={(event) => {
+              //   handleClick(event, cellValues);
+              // }}
+            >
+              Apply
+            </Button>
+          );
+        }
+      }
     ];
 
     async function fetch() {
@@ -230,7 +246,7 @@ const JobSeekerDashboard = (props) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <div style={{ width: "65%", margin: "2%" }}>
+      <div style={{ width: "95%", margin: "2.5%" }}>
         <CustomDataGrid columns={state.columns} rows={state.rows} />
       </div>
     </>
