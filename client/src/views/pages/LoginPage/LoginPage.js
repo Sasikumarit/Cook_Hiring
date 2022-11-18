@@ -50,7 +50,7 @@ const LoginPage = () => {
               }
             );
             setState(initialState);
-                 history.push({pathname:'/dashboard',state:{...response.data.response}})
+            history.push({pathname:'/dashboard',state:{...response.data.response}})
           
         } else {
             toast.error("Please check Email and Password", {
