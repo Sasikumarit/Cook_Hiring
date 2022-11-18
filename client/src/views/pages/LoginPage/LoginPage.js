@@ -5,8 +5,6 @@ import Button from "../../components/Button/Button";
 import { toast } from "react-toastify";
 import _ from "lodash";
 import { useHistory } from "react-router-dom";
-import { Roles } from "../../util/Roles";
-
 import "../../../styles/styles.css";
 
 const LoginPage = () => {
