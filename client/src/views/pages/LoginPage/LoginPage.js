@@ -50,15 +50,7 @@ const LoginPage = () => {
               }
             );
             setState(initialState);
-              if(response.data.response.userrole.toLowerCase()===Roles.Admin.toLowerCase() ){
-                 history.push({pathname:'/admindashboard',state:{...response.data.response}})
-              }
-              else if(response.data.response.userrole.toLowerCase()===Roles.Customer.toLowerCase()){
-                history.push({pathname:'/customerdashboard',state:{...response.data.response}})
-              }
-              else if(response.data.response.userrole.toLowerCase()===Roles.Cook.toLowerCase()){
-                history.push({pathname:'/jobseekerdashboard',state:{...response.data.response}})
-              }
+                 history.push({pathname:'/dashboard',state:{...response.data.response}})
           
         } else {
             toast.error("Please check Email and Password", {

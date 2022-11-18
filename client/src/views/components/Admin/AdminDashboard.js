@@ -13,20 +13,70 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useHistory } from "react-router-dom";
-import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
+import CustomDataGrid from "../CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
-import { DateTime } from "luxon";
+import {DateTime} from 'luxon'
 
-const pages = ["Dashboard", "Applied Jobs"];
+const pages = ["Dashboard", "Applied Jobs", "Jobs Posted", "Post Jobs", "Applied Candidates"];
 const settings = ["Profile", "Logout"];
 
-const JobSeekerDashboard = (props) => {
+const AdminDashboard = (props) => {
   const history = useHistory();
   console.log("props", props);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const [state, setState] = React.useState({ columns: [], rows: [] });
+  // const Jobcolumns = [
+  //   { field: "id", headerName: "S.No", width: 90 },
+  //   {
+  //     field: "jobseekername",
+  //     headerName: "Job Seeker Name",
+  //     width: 150,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: "email",
+  //     headerName: "email",
+  //     width: 150,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: "mobileno",
+  //     headerName: "Mobile No",
+  //     width: 110,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: "location",
+  //     headerName: "Location",
+  //     width: 150,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: "yearofxp",
+  //     headerName: "Year Of XP",
+  //     type: "number",
+  //     width: 110,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: "applieduserid",
+  //     headerName: "Applied User",
+  //     width: 110,
+  //     editable: true,
+  //   },
+  //   // {
+  //   //   field: 'fullName',
+  //   //   headerName: 'Full name',
+  //   //   description: 'This column has a value getter and is not sortable.',
+  //   //   sortable: false,
+  //   //   width: 160,
+  //   //   valueGetter: (params) =>
+  //   //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  //   // },
+  // ];
+
 
   React.useEffect(() => {
     const columns = [
@@ -55,8 +105,8 @@ const JobSeekerDashboard = (props) => {
         headerName: "From Date",
         width: 150,
         editable: true,
-        valueGetter: (params) =>
-          `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
+           valueGetter: (params) =>
+          `${DateTime.fromISO(params.row.fromdate).toFormat('dd-MM-yyyy')}`,
       },
       {
         field: "todate",
@@ -64,17 +114,26 @@ const JobSeekerDashboard = (props) => {
         width: 110,
         editable: true,
         valueGetter: (params) =>
-          `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
+        `${DateTime.fromISO(params.row.todate).toFormat('dd-MM-yyyy')}`,
       },
-
+     
+    
       {
         field: "userid",
         headerName: "User",
         width: 110,
         editable: true,
       },
+      // {
+      //   field: 'fullName',
+      //   headerName: 'Full name',
+      //   description: 'This column has a value getter and is not sortable.',
+      //   sortable: false,
+      //   width: 160,
+      //   valueGetter: (params) =>
+      //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      // },
     ];
-
     async function fetch() {
       await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
         if (res.status === 200) {
@@ -221,7 +280,10 @@ const JobSeekerDashboard = (props) => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleCloseUserMenu(setting)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
@@ -236,5 +298,4 @@ const JobSeekerDashboard = (props) => {
     </>
   );
 };
-
-export default JobSeekerDashboard;
+export default AdminDashboard;
