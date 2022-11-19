@@ -3,9 +3,8 @@ import { useHistory } from "react-router-dom";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 
-const AppliedCandidates = (props) => {
+const AppliedCandidates = ({user}) => {
   const history = useHistory();
-  console.log("props", props);
 
   const [state, setState] = React.useState({ columns: [], rows: [] });
 
@@ -14,13 +13,13 @@ const AppliedCandidates = (props) => {
       { field: "id", headerName: "S.No", width: 90 },
       {
         field: "jobseekername",
-        headerName: "Name",
+        headerName: "Name of Candidates",
         width: 150,
         editable: false,
       },
       {
         field: "location",
-        headerName: "Wage Per Day",
+        headerName: "Location",
         type: "number",
         width: 110,
         editable: false,
@@ -53,14 +52,14 @@ const AppliedCandidates = (props) => {
     ];
 
     async function fetch() {
-      await Axios.get(process.env.REACT_APP_ServerHost + `job_seeker`).then((res) => {
-        if (res.status === 200) {
-          setState({ columns: columns, rows: res.data.response });
-          return res.data.response;
-        }
-        return res;
-      });
-    }
+        await Axios.get(process.env.REACT_APP_ServerHost + `jobseeker/findAppliedUser/${user.id}`).then((res) => {
+          if (res.status === 200) {
+            setState({ columns: columns, rows: res.data.response });
+            return res.data.response;
+          }
+          return res;
+        });
+      }
     fetch();
   }, []);
 

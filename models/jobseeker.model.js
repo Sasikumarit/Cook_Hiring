@@ -2,13 +2,14 @@ const sql = require("./db.js");
 
 // constructor
 const Jobseeker = function(jobseeker) {
-  this.id = jobseeker.id;
+  //this.id = jobseeker.id;
   this.jobseekername = jobseeker.jobseekername;
   this.location = jobseeker.location;
   this.mobileno = jobseeker.mobileno;
   this.email = jobseeker.email;
   this.yearofxp = jobseeker.yearofxp;
   this.applieduserid = jobseeker.applieduserid;
+  this.jobid=jobseeker.jobid;
 };
 
 Jobseeker.create = (newJobseeker, result) => {
@@ -61,7 +62,6 @@ Jobseeker.findAppliedUserId = (applieduserid, result) => {
   });
 };
 
-
 Jobseeker.getAll = (id, result) => {
   let query = "SELECT * FROM job_seeker";
 
@@ -83,7 +83,7 @@ Jobseeker.getAll = (id, result) => {
 
 Jobseeker.updateById = (id, jobseeker, result) => {
   sql.query(
-    "UPDATE job_seeker SET jobseekername = ?, location = ?, mobileno = ?,  email = ?, yearofxp = ?,applieduserid=? WHERE id = ?",
+    "UPDATE job_seeker SET jobseekername = ?, location = ?, mobileno = ?,  email = ?, yearofxp = ?,applieduserid=?,jobid=? WHERE id = ?",
     [
       jobseeker.jobseekername,
       jobseeker.location,
@@ -91,6 +91,7 @@ Jobseeker.updateById = (id, jobseeker, result) => {
       jobseeker.email,
       jobseeker.yearofxp,
       jobseeker.applieduserid,
+      jobseeker.jobid,
       id,
     ],
     (err, res) => {

@@ -18,7 +18,8 @@ exports.create = (req, res) => {
     mobileno:req.body.mobileno,
     email:req.body.email,
     yearofxp:req.body.yearofxp ,
-    applieduserid:req.body.applieduserid   
+    applieduserid:req.body.applieduserid,
+    jobid:req.body.jobid  
   });
 
   // Save Jobseeker in the database

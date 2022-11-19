@@ -9,5 +9,6 @@ export const Navbar ={
     JobsPosted:'Jobs Posted',
     AppliedJobs : 'Applied Jobs',
     AppliedCandidates:'Applied Candidates',
-    PostJobs:"Post Jobs"
+    PostJobs:"Post Jobs",
+    ApplicationForm:'ApplicationForm'
 }

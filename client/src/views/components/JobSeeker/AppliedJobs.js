@@ -4,10 +4,9 @@ import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 import { DateTime } from "luxon";
 
-const AppliedJobs = (props) => {
+const AppliedJobs = ({user}) => {
   const history = useHistory();
-  console.log("props", props);
-
+  
   const [state, setState] = React.useState({ columns: [], rows: [] });
 
   React.useEffect(() => {
@@ -48,7 +47,6 @@ const AppliedJobs = (props) => {
         valueGetter: (params) =>
           `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
       },
-
       {
         field: "userid",
         headerName: "User",
@@ -58,7 +56,7 @@ const AppliedJobs = (props) => {
     ];
 
     async function fetch() {
-      await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
+      await Axios.get(process.env.REACT_APP_ServerHost + `jobs/findAppliedUser/${user.id}`).then((res) => {
         if (res.status === 200) {
           setState({ columns: columns, rows: res.data.response });
           return res.data.response;

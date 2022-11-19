@@ -105,6 +105,30 @@ exports.findUser = (req, res) => {
   });
 };
 
+// Find a single Job by Id
+exports.findAppliedUser = (req, res) => {
+  Jobs.findAppliedUserById(req.params.id, (err, results) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          status: 404,
+          error: `Not found AppliedUser with id ${req.params.id}.`,
+        });
+      } else {
+        res.status(500).send({
+          status: 500,
+          error: "Error retrieving job with id " + req.params.id,
+        });
+      }
+    }
+        res.send({
+          status: 200,
+          error: null,
+          response:results,
+        });
+  });
+};
+
 // Update a Job identified by the id in the request
 exports.update = (req, res) => {
   // Validate Request

@@ -2,7 +2,7 @@ const sql = require("./db.js");
 
 // constructor
 const Jobs = function (job) {
-  this.id = job.id;
+  //this.id = job.id;
   this.jobdescription = job.jobdescription;
   this.wageperday = job.wageperday;
   this.location = job.location;
@@ -42,8 +42,28 @@ Jobs.findById = (id, result) => {
   });
 };
 
+
 Jobs.findUserId = (userid, result) => {
   sql.query(`SELECT * FROM jobs WHERE userid = ${userid}`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found job: ", res[0]);
+      result(null, res);
+      return;
+    }
+
+    // not found Job with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Jobs.findAppliedUserById = (id, result) => {
+  sql.query(`select a.*, b.applieduserid,b.id as jobseekerid, b.jobseekername from jobs a, job_seeker b where b.jobid=a.id and b.applieduserid= ${id}`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);

@@ -19,8 +19,6 @@ import Axios from "axios";
 import { DateTime } from "luxon";
 import { Roles, Navbar } from "../../util/Utils";
 
-//import AppliedJobs from '../../components/Admin/JobsPosted'
-
 const PostJobs = lazy(() => import("../../components/Customer/PostJob"));
 const AppliedCandidates = lazy(() =>
   import("../../components/Customer/AppliedCandidates")
@@ -31,98 +29,195 @@ const AppliedJobs = lazy(() =>
 const JobsPosted = lazy(() =>
 import('../../components/Admin/JobsPosted')
 );
+const ApplicationForm =lazy(() =>
+import("../../components/JobSeeker/ApplicationForm")
+);
 
-const adminPages = ["Dashboard", "Applied Jobs", "Jobs Posted"];
+const adminPages = ["Dashboard", "Applied Jobs"];
 const customerPages = ["Dashboard", "Post Jobs", "Applied Candidates"];
 const jobseekerPages = ["Dashboard", "Applied Jobs"];
 const settings = ["Profile", "Logout"];
 
-const jobGridColumns = [
-  { field: "id", headerName: "S.No", width: 90 },
-  {
-    field: "jobdescription",
-    headerName: "Job Description",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "wageperday",
-    headerName: "Wage Per Day",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "location",
-    headerName: "Location",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "fromdate",
-    headerName: "From Date",
-    width: 150,
-    editable: true,
-    valueGetter: (params) =>
-      `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
-  },
-  {
-    field: "todate",
-    headerName: "To Date",
-    width: 110,
-    editable: true,
-    valueGetter: (params) =>
-      `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
-  },
-
-  {
-    field: "userid",
-    headerName: "User",
-    width: 110,
-    editable: true,
-  },
-  {
-    renderCell: (cellValues) => {
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          // onClick={(event) => {
-          //   handleClick(event, cellValues);
-          // }}
-        >
-          Apply
-        </Button>
-      );
-    },
-  },
-];
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "setJobState":
-      return { ...state, ...action.payload };
-    case "setJobSeekerState":
-      return { ...state, ...action.payload };
-    case "setAdminState":
-      return { ...state, ...action.payload };
+    case "setGridRowData":
+      return { ...state,rows:action.payload };
     case "setNavBarTitle":
       return { ...state, navBarTitle: action.payload };
+    case "setSelectedJobData":
+        return {...state,selectedJobData: action.payload}
     default:
       return state;
   }
 };
 
-const initialState = {
-  jobGridColumns: jobGridColumns,
-  cookGridColumns: [],
-  adminGridColumns: [],
-  rows: [],
-  navBarTitle: "Dashboard",
-};
 
 const Dashboard = (props) => {
   const history = useHistory();
+
+  const jobGridColumns = [
+    { field: "id", headerName: "S.No", width: 90 },
+    {
+      field: "jobdescription",
+      headerName: "Job Description",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "wageperday",
+      headerName: "Wage Per Day",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "fromdate",
+      headerName: "From Date",
+      width: 150,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
+    },
+    {
+      field: "todate",
+      headerName: "To Date",
+      width: 110,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
+    },
+  
+    {
+      field: "userid",
+      headerName: "User",
+      width: 110,
+      editable: true,
+    }
+  ];
+  
+  const adminGridColumns = [
+    { field: "id", headerName: "S.No", width: 90 },
+    {
+      field: "jobdescription",
+      headerName: "Job Description",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "wageperday",
+      headerName: "Wage Per Day",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "fromdate",
+      headerName: "From Date",
+      width: 150,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
+    },
+    {
+      field: "todate",
+      headerName: "To Date",
+      width: 110,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
+    },
+  
+    {
+      field: "userid",
+      headerName: "User",
+      width: 110,
+      editable: true,
+    }
+  ];
+
+const cookGridColumns = [
+    { field: "id", headerName: "S.No", width: 90 },
+    {
+      field: "jobdescription",
+      headerName: "Job Description",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "wageperday",
+      headerName: "Wage Per Day",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "fromdate",
+      headerName: "From Date",
+      width: 150,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
+    },
+    {
+      field: "todate",
+      headerName: "To Date",
+      width: 110,
+      editable: true,
+      valueGetter: (params) =>
+        `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
+    },
+  
+    {
+      field: "userid",
+      headerName: "User",
+      width: 110,
+      editable: true,
+    },
+          {
+        renderCell: (cellValues) => {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(event) => {
+                 dispatch({ type: "setNavBarTitle", payload: 'ApplicationForm' })
+                 dispatch({type:'setSelectedJobData',payload:cellValues.row})
+              }}
+            >
+              Apply
+            </Button>
+          );
+        },
+      },
+  ];
+
+    const initialState = {
+        jobGridColumns: jobGridColumns,
+        cookGridColumns: cookGridColumns,
+        adminGridColumns: adminGridColumns,
+        rows: [],
+        navBarTitle: "Dashboard",
+        selectedJobData:null,
+      };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -139,32 +234,19 @@ const Dashboard = (props) => {
   }, []);
 
   React.useEffect(() => {
-    async function jobfetch() {
-      await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
-        if (res.status === 200) {
-          dispatch({
-            type: "setJobState",
-            payload: { rows: res.data.response },
+    async function fetch(){
+        await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
+            if (res.status === 200) {
+              dispatch({
+                type: "setGridRowData",
+                payload: res.data.response,
+              });
+              return res.data.response;
+            }
+            return res;
           });
-          return res.data.response;
-        }
-        return res;
-      });
     }
-
-    function adminfetch(){}
-    function cookfetch(){}
-
-   if(user?.userrole.toLowerCase() ===
-        Roles.Admin.toLowerCase()){ adminfetch()}
-
-     if(user?.userrole.toLowerCase() ===
-        Roles.Cook.toLowerCase()) { cookfetch()}
-
-  if(user?.userrole.toLowerCase() ===
-        Roles.Customer.toLowerCase()){  jobfetch()}
-
-   
+        fetch()     
   }, [user]);
 
   const handleOpenNavMenu = (event) => {
@@ -197,16 +279,19 @@ const Dashboard = (props) => {
       return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} />;
     }
     if (state.navBarTitle === Navbar.PostJobs) {
-      return <PostJobs />;
+      return <PostJobs user={user} />;
     }
     if (state.navBarTitle === Navbar.AppliedCandidates) {
-      return <AppliedCandidates />;
+      return <AppliedCandidates user={user}/>;
     }
     if (state.navBarTitle === Navbar.AppliedJobs) {
-      return <AppliedJobs />;
+      return <AppliedJobs user={user}/>;
     }
     if (state.navBarTitle === Navbar.JobsPosted) {
-        return <JobsPosted />;
+        return <JobsPosted user={user}/>;
+      }
+      if (state.navBarTitle === Navbar.ApplicationForm) {
+        return <ApplicationForm user={user} handleCloseNavMenu={handleCloseNavMenu} selectedJobData={state.selectedJobData}/>;
       }
     return <div></div>;
   };
