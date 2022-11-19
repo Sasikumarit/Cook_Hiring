@@ -16,28 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `customer_details`
+-- Table structure for table `user_details`
 --
 
-DROP TABLE IF EXISTS `customer_details`;
+DROP TABLE IF EXISTS `user_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customer_details` (
-  `id` bigint NOT NULL,
-  `user_details_userid` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKdbmgxasaqnydcwbjwyicx3gk` (`user_details_userid`),
-  CONSTRAINT `FKdbmgxasaqnydcwbjwyicx3gk` FOREIGN KEY (`user_details_userid`) REFERENCES `user_details` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `user_details` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `confirmpassword` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `mobileno` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `userrole` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `customer_details`
+-- Dumping data for table `user_details`
 --
 
-LOCK TABLES `customer_details` WRITE;
-/*!40000 ALTER TABLE `customer_details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customer_details` ENABLE KEYS */;
+LOCK TABLES `user_details` WRITE;
+/*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
+INSERT INTO `user_details` VALUES (1,'dhruv','dhruv@gmail.com','9000900090','dhruv','Dhruv','admin'),(3,'sasi','sasi@gmail.com',NULL,'sasi','sasi','admin'),(4,'user','user@gmail.com','12345','user','user','customer'),(5,'cook','cook@gmail.com','12345','cook','cook','cook'),(6,'test','test@gmail.com','12345','test','test','Customer');
+/*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-15 21:17:36
+-- Dump completed on 2022-11-19 21:14:39

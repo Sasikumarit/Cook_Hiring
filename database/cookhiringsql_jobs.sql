@@ -16,34 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `customers`
+-- Table structure for table `jobs`
 --
 
-DROP TABLE IF EXISTS `customers`;
+DROP TABLE IF EXISTS `jobs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customers` (
-  `id` bigint NOT NULL,
-  `fromdate` varchar(255) DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `todate` varchar(255) DEFAULT NULL,
-  `wageperday` bigint NOT NULL,
+CREATE TABLE `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `jobdescription` varchar(255) DEFAULT NULL,
-  `customer_details_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKcti79gfevbrq8vl36f9ixwbdy` (`customer_details_id`),
-  CONSTRAINT `FKcti79gfevbrq8vl36f9ixwbdy` FOREIGN KEY (`customer_details_id`) REFERENCES `customer_details` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `wageperday` bigint NOT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `fromdate` date DEFAULT NULL,
+  `todate` date DEFAULT NULL,
+  `userid` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `customers`
+-- Dumping data for table `jobs`
 --
 
-LOCK TABLES `customers` WRITE;
-/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (1,'11/11/2022','Hyderabad','08/01/2023',950,NULL,NULL);
-/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+LOCK TABLES `jobs` WRITE;
+/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
+INSERT INTO `jobs` VALUES (1,'Chinese Cuisine',1000,'Hyderabad','2022-11-15','2022-12-16','1'),(2,'Chinese Cuisine 2',100,'Hyderabad','2022-11-16','2022-12-17','1'),(3,'Chinese Cuisine 1',100,'Hyderabad','2022-11-16','2022-12-17','2'),(4,'Chinese Cuisine 2',200,'Hyderabad','2022-11-16','2022-12-17','2');
+/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -55,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-15 21:17:37
+-- Dump completed on 2022-11-19 21:14:39
