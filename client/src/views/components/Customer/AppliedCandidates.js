@@ -44,7 +44,7 @@ const AppliedCandidates = ({user}) => {
       },
 
       {
-        field: "userid",
+        field: "username",
         headerName: "User",
         width: 110,
         editable: false,
@@ -52,7 +52,7 @@ const AppliedCandidates = ({user}) => {
     ];
 
     async function fetch() {
-        await Axios.get(process.env.REACT_APP_ServerHost + `jobseeker/findAppliedUser/${user.id}`).then((res) => {
+        await Axios.get(process.env.REACT_APP_ServerHost + `jobseeker/findAppliedCandidate/${user.id}`).then((res) => {
           if (res.status === 200) {
             setState({ columns: columns, rows: res.data.response });
             return res.data.response;

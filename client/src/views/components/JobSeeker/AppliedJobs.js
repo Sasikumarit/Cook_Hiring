@@ -48,8 +48,8 @@ const AppliedJobs = ({user}) => {
           `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
       },
       {
-        field: "userid",
-        headerName: "User",
+        field: "username",
+        headerName: "User Name",
         width: 110,
         editable: false,
       },

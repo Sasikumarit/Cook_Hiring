@@ -18,7 +18,8 @@ const PostJob=({user})=>{
     fromdate:dayjs(new Date()),
     todate:dayjs(new Date()),
     wageperday:'',
-    mobileno:''
+    mobileno:'',
+    userid:user.id,
   }
 
   const [state, setState]=useState(initialState);
@@ -34,7 +35,7 @@ const PostJob=({user})=>{
   }
 
   const onSubmitHandler=()=>{
-    if(_.isEmpty(state.jobdescription)||_.isEmpty(state.location)||_.isEmpty(state.mobileno)||_.isEmpty(state.wageperday)||_.isEmpty(state.fromdate)||_.isEmpty(state.todate)){
+    if(_.isEmpty(state.jobdescription)||_.isEmpty(state.location)||_.isEmpty(state.wageperday)||_.isEmpty(state.fromdate)||_.isEmpty(state.todate)){
       toast.error("Please enter all manadatory data", {
         position: "top-right",
         autoClose: 5000,
@@ -90,7 +91,7 @@ const PostJob=({user})=>{
       noValidate
       autoComplete="off"
     >
-      <div>
+      <div style={{display:'flex'}}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TextField required id="jobdescription" label="Job's Description" value={state.jobdescription} onChange={onChangeHandler}/>
         <TextField required id="location" label="Location" value={state.location} onChange={onChangeHandler}/>
@@ -119,11 +120,10 @@ const PostJob=({user})=>{
         />
        
         <TextField required id="wageperday" label="Wage/Pay (per day)" value={state.wageperday} onChange={onChangeHandler} />
-        <TextField required id="mobileno" label="Mobile Number" value={state.mobileno} onChange={onChangeHandler}/>
 
-        <Grid container justifyContent="flex-end">
+<div style={{marginTop: "1rem"}}>
           <Button variant="contained" id='btn_login' onClick={()=>onSubmitHandler()}>Post Job</Button>
-        </Grid>
+          </div>
         </LocalizationProvider>
       </div>
     </Box>

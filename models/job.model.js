@@ -63,7 +63,26 @@ Jobs.findUserId = (userid, result) => {
 };
 
 Jobs.findAppliedUserById = (id, result) => {
-  sql.query(`select a.*, b.applieduserid,b.id as jobseekerid, b.jobseekername from jobs a, job_seeker b where b.jobid=a.id and b.applieduserid= ${id}`, (err, res) => {
+  sql.query(`select a.*, b.applieduserid ,b.id as jobseekerid, b.jobseekername,us.username from jobs a inner join job_seeker b  on a.id=b.jobid inner join user_details us on b.applieduserid=us.id where b.applieduserid=${id}`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found job: ", res[0]);
+      result(null, res);
+      return;
+    }
+
+    // not found Job with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Jobs.findJobByUserId = (id, result) => {
+  sql.query(`select js.*,us.username from jobs js inner join user_details us on js.userid=us.id where js.id not in(select jb.id from jobs jb inner join job_seeker js on jb.id = js.jobid where js.applieduserid=${id})`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);
@@ -82,7 +101,7 @@ Jobs.findAppliedUserById = (id, result) => {
 };
 
 Jobs.getAll = (id, result) => {
-  let query = "SELECT * FROM jobs";
+  let query = "select js.*,us.username from jobs js left join user_details us on js.userid=us.id";
 
   if (id) {
     query += ` WHERE id '%${id}%'`;

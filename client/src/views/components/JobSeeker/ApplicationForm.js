@@ -8,19 +8,18 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
-
   const initialState={
-    jobseekername:'',
+    jobseekername:user.username,
     location:'',
-    mobileno:'',
-    email:'',
+    mobileno:user.mobileno,
+    email:user.email,
     yearofxp:'',
     applieduserid:user.id,
     jobid:selectedJobData.id
   }
 
   const [state, setState]=useState(initialState);
-  
+
   const onChangeHandler=(event,controlid,controlvalue)=>{
     const {id,value}=event.target;
     setState({...state,[id]:value})
@@ -86,10 +85,10 @@ const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
       autoComplete="off"
     >
       <div>
-        <TextField required id="jobseekername" label="Name" value={state.jobseekername} onChange={onChangeHandler} />
+        <TextField required id="jobseekername" label="Name" disabled={true} value={state.jobseekername} />
         <TextField required id="location" label="Location" value={state.location} onChange={onChangeHandler} />
-        <TextField required id="mobileno" label="Mobile Number"value={state.mobileno} onChange={onChangeHandler} />
-        <TextField id="email" label="Email Address"  value={state.email} onChange={onChangeHandler} />
+        <TextField required id="mobileno" label="Mobile Number" disabled={true} value={state.mobileno} />
+        <TextField id="email" label="Email Address"  disabled={true} value={state.email}  />
         <TextField
           id="yearofxp"
           value={state.yearofxp}

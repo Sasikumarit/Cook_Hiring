@@ -103,6 +103,29 @@ exports.findAppliedUserById = (req, res) => {
   });
 };
 
+exports.findAppliedCandidate = (req, res) => {
+  Jobseeker.findAppliedCandidateById(req.params.id, (err, results) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          status: 404,
+          error: `Not found job with applieduserid ${req.params.id}.`,
+        });
+      } else {
+        res.status(500).send({
+          status: 500,
+          error: "Error retrieving job with applieduserid " + req.params.id,
+        });
+      }
+    }
+        res.send({
+          status: 200,
+          error: null,
+          response:results,
+        });
+  });
+};
+
 // Update a Jobseeker identified by the id in the request
 exports.update = (req, res) => {
   // Validate Request
