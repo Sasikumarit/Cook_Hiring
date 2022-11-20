@@ -1,11 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import AddIcon from "@mui/icons-material/Add";
+import Button from "@mui/material/Button";
 
-const CustomDataGrid=({columns,rows,title})=> {
+const CustomDataGrid=({columns,rows,title,user,buttonText,OnButtonClickHandler})=> {
   return (
     <Box sx={{ height: 400, width: '95%' }}>
       <h1>{title}</h1>
+     {user?.userrole.toLowerCase()==="admin" &&( <div>
+      <Button variant="outlined" startIcon={<AddIcon />}>
+           {buttonText}
+          </Button>
+          </div>)}
       <DataGrid
         rows={rows}
         columns={columns}
@@ -15,6 +22,7 @@ const CustomDataGrid=({columns,rows,title})=> {
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
       />
+         
     </Box>
   );
 }

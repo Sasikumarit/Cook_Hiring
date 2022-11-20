@@ -19,6 +19,9 @@ module.exports = (app) => {
     router.get("/findAppliedUser/:id", jobs.findAppliedUser);
 
     // Retrieve a single findAppliedUser with id
+    router.get("/findAllAppliedUser/:id", jobs.findAllAppliedUser);
+
+    // Retrieve a single findAppliedUser with id
     router.get("/findJobByUser/:id", jobs.findJobByUser);
 
      // Update a Job with id

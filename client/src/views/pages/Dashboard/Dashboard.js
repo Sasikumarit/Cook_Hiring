@@ -12,6 +12,11 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link } from "react-router-dom";
+import {toast} from 'react-toastify'
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { useHistory } from "react-router-dom";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
@@ -57,7 +62,7 @@ const Dashboard = (props) => {
   const history = useHistory();
 
   const jobGridColumns = [
-    { field: "id", headerName: "S.No", width: 90 },
+    { field: "sno", headerName: "S.No", width: 90 },
     {
       field: "jobdescription",
       headerName: "Job Description",
@@ -103,7 +108,7 @@ const Dashboard = (props) => {
   ];
   
   const adminGridColumns = [
-    { field: "id", headerName: "S.No", width: 90 },
+    { field: "sno", headerName: "S.No", width: 90 },
     {
       field: "jobdescription",
       headerName: "Job Description",
@@ -145,11 +150,51 @@ const Dashboard = (props) => {
       headerName: "User Name",
       width: 110,
       editable: true,
-    }
+    },
+    {
+        field: "Edit",
+        width: 110,
+        headerName: "",
+        renderCell: (cellValues) => {
+          const { row, id } = cellValues;
+          return (
+            <Link
+              to={{
+                pathname: "/editmember",
+                state: { row, id },
+              }}
+            >
+              <Button variant="outlined" startIcon={<EditIcon />}>
+                Edit
+              </Button>
+            </Link>
+          );
+        },
+      },
+      {
+        field: "Delete",
+        width: 110,
+        headerName: "",
+        renderCell: (cellValues) => {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(event) => {
+                handleGridDeleteButton(cellValues?.row?.id)
+              }}
+              startIcon={<DeleteIcon />}
+              fullWidth={true}
+            >
+              Delete
+            </Button>
+          );
+        },
+      },
   ];
 
 const cookGridColumns = [
-    { field: "id", headerName: "S.No", width: 90 },
+    { field: "sno", headerName: "S.No", width: 90 },
     {
       field: "jobdescription",
       headerName: "Job Description",
@@ -235,7 +280,7 @@ const cookGridColumns = [
 
   React.useEffect(() => {
     async function fetch(){
-        await Axios.get(process.env.REACT_APP_ServerHost + `${user.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`).then((res) => {
+        await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user?.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`).then((res) => {
             if (res.status === 200) {
               dispatch({
                 type: "setGridRowData",
@@ -270,13 +315,43 @@ const cookGridColumns = [
     }
   };
 
+async function handleGridDeleteButton(id){
+    await Axios.delete(process.env.REACT_APP_ServerHost + `jobs/${id}`).then((res) => {
+        if (res.status === 200) {
+            toast.success("Job Successfully Deleted.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+        }
+        else{
+            toast.error("Failed to delete.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+        }
+        return res;
+      });
+}
+
   useEffect(() => {
     conditionalRenderComponent();
   }, [state.navBarTitle]);
 
   const conditionalRenderComponent = () => {
     if (state.navBarTitle === Navbar.Dashboard) {
-      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} />;
+      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} />;
     }
     if (state.navBarTitle === Navbar.PostJobs) {
       return <PostJobs user={user} />;
@@ -476,10 +551,14 @@ const cookGridColumns = [
                     onClose={handleCloseUserMenu}
                   >
                      <MenuItem
-                        // key={setting}
-                        // onClick={() => handleCloseUserMenu(setting)}
+                        key={'Username'}
                       >
                         <Typography textAlign="center">{'Username: '+user?.username}</Typography>
+                      </MenuItem>
+                      <MenuItem
+                        key={'Role'}
+                      >
+                        <Typography textAlign="center">{'Role: '+user?.userrole.toUpperCase()}</Typography>
                       </MenuItem>
                     {settings.map((setting) => (
                       <MenuItem

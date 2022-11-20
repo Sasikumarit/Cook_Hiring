@@ -10,7 +10,7 @@ const AppliedCandidates = ({user}) => {
 
   React.useEffect(() => {
     const columns = [
-      { field: "id", headerName: "S.No", width: 90 },
+      { field: "sno", headerName: "S.No", width: 90 },
       {
         field: "jobseekername",
         headerName: "Name of Candidates",

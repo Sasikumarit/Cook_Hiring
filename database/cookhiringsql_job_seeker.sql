@@ -32,7 +32,7 @@ CREATE TABLE `job_seeker` (
   `applieduserid` varchar(200) DEFAULT NULL,
   `jobid` bigint DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `job_seeker` (
 
 LOCK TABLES `job_seeker` WRITE;
 /*!40000 ALTER TABLE `job_seeker` DISABLE KEYS */;
-INSERT INTO `job_seeker` VALUES (1,'Cook1','Hyderabad','9000990090','cook1@gmail.com',2,'1',1),(2,'Cook2','Hyderabad','9000990090','cook1@gmail.com',2,'2',3),(3,'Cook2','Hyderabad','9000990090','cook1@gmail.com',2,'1',NULL),(4,'Cook4','Hyderabad','9000990090','cook1@gmail.com',2,'2',NULL),(11,'test1','india','12345','test1@gmail.com',5,'5',NULL),(12,'Test2','india','12345','test2@gmail.com',5,'5',2),(13,'Test3','india','12345','test4@gmail.com',6,'6',2),(14,'Test5','india','12345','test5@gmail.com',7,'5',10),(15,'Dhruv','USA','98756','dhruv@gmail.com',9,'5',12);
+INSERT INTO `job_seeker` VALUES (19,'Bob','Hyderabad','9555955595','bobdylan@gmail.com',4,'9',19),(20,'Bob','Hyderabad','9555955595','bobdylan@gmail.com',4,'9',20),(21,'Jack','Hyderabad','9444944494','jackdylon@gmail.com',5,'11',21),(22,'Jack','Hyderabad','9444944494','jackdylon@gmail.com',5,'11',22),(23,'Sanjeev','Hyderabad','9666966696','sanjeevkapoor@gmail.com',7,'12',19),(24,'Sanjeev','Hyderabad','9666966696','sanjeevkapoor@gmail.com',7,'12',21);
 /*!40000 ALTER TABLE `job_seeker` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-20  2:20:59
+-- Dump completed on 2022-11-21  2:24:17

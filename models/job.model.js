@@ -14,7 +14,7 @@ const Jobs = function (job) {
 Jobs.create = (newJob, result) => {
   sql.query("INSERT INTO jobs SET ?", newJob, (err, res) => {
     if (err) {
-     // console.log("error: ", err);
+      // console.log("error: ", err);
       result(err, null);
       return;
     }
@@ -24,7 +24,7 @@ Jobs.create = (newJob, result) => {
 };
 
 Jobs.findById = (id, result) => {
-  sql.query(`SELECT * FROM jobs WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT row_number() over(order by id) as sno,* FROM jobs WHERE id = ${id}`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);
@@ -42,68 +42,100 @@ Jobs.findById = (id, result) => {
   });
 };
 
-
 Jobs.findUserId = (userid, result) => {
-  sql.query(`SELECT js.*,us.username FROM jobs js inner join user_details us on js.userid=us.id WHERE js.userid= ${userid}`, (err, res) => {
-    if (err) {
-      // console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    `SELECT row_number() over(order by js.id) as sno,js.*,us.username FROM jobs js inner join user_details us on js.userid=us.id WHERE js.userid= ${userid}`,
+    (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      //console.log("found job: ", res[0]);
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        //console.log("found job: ", res[0]);
+        result(null, res);
+        return;
+      }
 
-    // not found Job with the id
-    result({ kind: "not_found" }, null);
-  });
+      // not found Job with the id
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 Jobs.findAppliedUserById = (id, result) => {
-  console.log("Query Entering",id)
-  sql.query(`SELECT js.*,us.username FROM jobs js inner join job_seeker jbs on jbs.jobid=js.id inner join user_details us on js.userid=us.id WHERE js.userid=${id}`, (err, res) => {
+  sql.query(
+    `SELECT row_number() over(order by js.id) as sno,js.*,us.username FROM jobs js 
+  inner join job_seeker jbs on jbs.jobid=js.id 
+  inner join user_details us on js.userid=us.id 
+  WHERE jbs.applieduserid=${id}`,
+    (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        result(err, []);
+        return;
+      }
+      if (res?.length) {
+        //console.log("found job: ", res[0]);
+        result(null, res);
+        return;
+      }
 
-    if (err) {
-      // console.log("error: ", err);
-      result(err, null);
-      return;
+      // not found Job with the id
+      result({ kind: "not_found" }, []);
     }
+  );
+};
 
-    if (res.length) {
-      //console.log("found job: ", res[0]);
-      result(null, res);
-      return;
+Jobs.findAllAppliedUserById = (id, result) => {
+  sql.query(
+    `SELECT row_number() over(order by js.id) as sno,js.*,us.username FROM jobs js 
+  inner join job_seeker jbs on jbs.jobid=js.id 
+  inner join user_details us on js.userid=us.id`,
+    (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        result(err, []);
+        return;
+      }
+      if (res.length) {
+        //console.log("found job: ", res[0]);
+        result(null, res);
+        return;
+      }
+
+      // not found Job with the id
+      result({ kind: "not_found" }, []);
     }
-
-    // not found Job with the id
-    result({ kind: "not_found" }, null);
-  });
+  );
 };
 
 Jobs.findJobByUserId = (id, result) => {
-  sql.query(`select js.*,us.username from jobs js inner join user_details us on js.userid=us.id where js.id not in(select jb.id from jobs jb inner join job_seeker js on jb.id = js.jobid where js.applieduserid=${id})`, (err, res) => {
-    if (err) {
-      // console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    `select row_number() over(order by js.id) as sno,js.*,us.username from jobs js inner join user_details us on js.userid=us.id where js.id not in(select jb.id from jobs jb inner join job_seeker js on jb.id = js.jobid where js.applieduserid=${id})`,
+    (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      //console.log("found job: ", res[0]);
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        //console.log("found job: ", res[0]);
+        result(null, res);
+        return;
+      }
 
-    // not found Job with the id
-    result({ kind: "not_found" }, null);
-  });
+      // not found Job with the id
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 Jobs.getAll = (id, result) => {
-  let query = "select js.*,us.username from jobs js left join user_details us on js.userid=us.id";
+  let query =
+    "select row_number() over(order by js.id) as sno,js.*,us.username from jobs js left join user_details us on js.userid=us.id";
 
   if (id) {
     query += ` WHERE id '%${id}%'`;
@@ -147,7 +179,7 @@ Jobs.updateById = (id, job, result) => {
       }
 
       // console.log("updated jobs: ", { id: id, ...job });
-      result(null,job);
+      result(null, job);
     }
   );
 };

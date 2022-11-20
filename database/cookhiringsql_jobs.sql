@@ -31,7 +31,7 @@ CREATE TABLE `jobs` (
   `todate` date DEFAULT NULL,
   `userid` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `jobs` (
 
 LOCK TABLES `jobs` WRITE;
 /*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
-INSERT INTO `jobs` VALUES (1,'Chinese Cuisine',1000,'Hyderabad','2022-11-15','2022-12-16','1'),(2,'Chinese Cuisine 2',100,'Hyderabad','2022-11-16','2022-12-17','1'),(3,'Chinese Cuisine 1',100,'Hyderabad','2022-11-16','2022-12-17','2'),(4,'Chinese Cuisine 2',200,'Hyderabad','2022-11-16','2022-12-17','2'),(10,'Testing Job',120,'india','2022-11-20','2022-11-20',NULL),(11,'Testing 1',500,'india','2022-11-20','2022-11-20',NULL),(12,'Test15',9,'USA','2022-11-20','2022-11-20',NULL);
+INSERT INTO `jobs` VALUES (19,'Chinese Cuisine',1200,'Hyderabad','2022-11-20','2022-11-30','8'),(20,'Thai Cuisine',1200,'Hyderabad','2022-11-20','2022-11-30','8'),(21,'Japanese Cuisine',1400,'Hyderabad','2022-11-20','2022-11-28','10'),(22,'Korean Cuisine',1400,'Hyderabad','2022-11-20','2022-11-28','10'),(23,'Arabic Cuisine',1500,'Hyderabad','2022-11-20','2022-11-28','10');
 /*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-20  2:20:59
+-- Dump completed on 2022-11-21  2:24:18

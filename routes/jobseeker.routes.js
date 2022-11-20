@@ -15,7 +15,11 @@ module.exports = (app) => {
   // Retrieve a single Jobs with id
   router.get("/findAppliedUser/:id", jobseeker.findAppliedUserById);
 
-  router.get("/findAppliedCandidate/:id", jobseeker.findAppliedCandidate);  
+  router.get("/findAppliedCandidate/:id", jobseeker.findAppliedCandidate); 
+   
+  router.get("/findAllAppliedCandidate/:id", jobseeker.findAllAppliedCandidate);  
+
+  
 
   // Update a Jobseeker with id
   router.put("/:id", jobseeker.update);

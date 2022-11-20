@@ -25,7 +25,7 @@ Jobseeker.create = (newJobseeker, result) => {
 };
 
 Jobseeker.findById = (id, result) => {
-  sql.query(`SELECT * FROM job_seeker WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT row_number() over(order by id) as sno,* FROM job_seeker WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -44,7 +44,7 @@ Jobseeker.findById = (id, result) => {
 };
 
 Jobseeker.findAppliedUserId = (applieduserid, result) => {
-  sql.query(`SELECT * FROM job_seeker WHERE applieduserid = ${applieduserid}`, (err, res) => {
+  sql.query(`SELECT row_number() over(order by id) as sno,* FROM job_seeker WHERE applieduserid = ${applieduserid}`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);
@@ -63,8 +63,8 @@ Jobseeker.findAppliedUserId = (applieduserid, result) => {
 };
 
 Jobseeker.findAppliedCandidateById = (id, result) => {
-  sql.query(`select js.jobid 
-  , js.id, js.jobseekername, js.location, js.mobileno, js.email as jobseekeremail, js.yearofxp,js.applieduserid,j.userid
+  sql.query(`select row_number() over(order by js.id) as sno,js.jobid 
+  , js.id, js.jobseekername, js.location, js.mobileno, js.email as email, js.yearofxp,js.applieduserid,j.userid
   , ud2.username, ud2.email as useremail
   from job_seeker js
   inner join jobs j on js.jobid = j.id
@@ -88,10 +88,34 @@ where  j.userid = ${id}`, (err, res) => {
   });
 };
 
+Jobseeker.findAllAppliedCandidateById = (id, result) => {
+  sql.query(`select row_number() over(order by js.id) as sno,js.jobid 
+  , js.id, js.jobseekername, js.location, js.mobileno, js.email as email, js.yearofxp,js.applieduserid,j.userid
+  , ud2.username, ud2.email as useremail
+  from job_seeker js
+  inner join jobs j on js.jobid = j.id
+  inner join user_details ud1 on js.applieduserid = ud1.id
+  inner join user_details ud2 on j.userid = ud2.id`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found job: ", res[0]);
+      result(null, res);
+      return;
+    }
+
+    // not found Job with the id
+    result({ kind: "not_found" }, null);
+  });
+};
 
 
 Jobseeker.getAll = (id, result) => {
-  let query = "SELECT * FROM job_seeker";
+  let query = "SELECT row_number() over(order by id) as sno,* FROM job_seeker";
 
   if (id) {
     query += ` WHERE id '%${id}%'`;
