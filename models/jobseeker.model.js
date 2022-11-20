@@ -64,12 +64,13 @@ Jobseeker.findAppliedUserId = (applieduserid, result) => {
 
 Jobseeker.findAppliedCandidateById = (id, result) => {
   sql.query(`select js.jobid 
-, js.id, js.jobseekername, js.location, js.mobileno, js.email as jobseekeremail, js.yearofxp,js.applieduserid,j.userid
-, ud1.username, ud1.email as useremail
-from job_seeker js
-inner join jobs j on js.jobid = j.id
-inner join user_details ud1 on js.applieduserid = ud1.id
-where js.applieduserid = ${id}`, (err, res) => {
+  , js.id, js.jobseekername, js.location, js.mobileno, js.email as jobseekeremail, js.yearofxp,js.applieduserid,j.userid
+  , ud2.username, ud2.email as useremail
+  from job_seeker js
+  inner join jobs j on js.jobid = j.id
+  inner join user_details ud1 on js.applieduserid = ud1.id
+  inner join user_details ud2 on j.userid = ud2.id
+where  j.userid = ${id}`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);
