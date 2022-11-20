@@ -95,8 +95,8 @@ const Dashboard = (props) => {
     },
   
     {
-      field: "userid",
-      headerName: "User",
+      field: "username",
+      headerName: "User Name",
       width: 110,
       editable: true,
     }
@@ -141,8 +141,8 @@ const Dashboard = (props) => {
     },
   
     {
-      field: "userid",
-      headerName: "User",
+      field: "username",
+      headerName: "User Name",
       width: 110,
       editable: true,
     }
@@ -187,8 +187,8 @@ const cookGridColumns = [
     },
   
     {
-      field: "userid",
-      headerName: "User",
+      field: "username",
+      headerName: "User Name",
       width: 110,
       editable: true,
     },
@@ -235,7 +235,7 @@ const cookGridColumns = [
 
   React.useEffect(() => {
     async function fetch(){
-        await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
+        await Axios.get(process.env.REACT_APP_ServerHost + `${user.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id :'jobs'}`).then((res) => {
             if (res.status === 200) {
               dispatch({
                 type: "setGridRowData",
