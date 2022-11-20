@@ -235,7 +235,7 @@ const cookGridColumns = [
 
   React.useEffect(() => {
     async function fetch(){
-        await Axios.get(process.env.REACT_APP_ServerHost + `${user.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id :'jobs'}`).then((res) => {
+        await Axios.get(process.env.REACT_APP_ServerHost + `${user.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`).then((res) => {
             if (res.status === 200) {
               dispatch({
                 type: "setGridRowData",
@@ -247,7 +247,7 @@ const cookGridColumns = [
           });
     }
         fetch()     
-  }, [user]);
+  }, [user,state.navBarTitle]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -475,6 +475,12 @@ const cookGridColumns = [
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
+                     <MenuItem
+                        // key={setting}
+                        // onClick={() => handleCloseUserMenu(setting)}
+                      >
+                        <Typography textAlign="center">{'Username: '+user?.username}</Typography>
+                      </MenuItem>
                     {settings.map((setting) => (
                       <MenuItem
                         key={setting}

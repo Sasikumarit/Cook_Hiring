@@ -44,7 +44,7 @@ Jobs.findById = (id, result) => {
 
 
 Jobs.findUserId = (userid, result) => {
-  sql.query(`SELECT * FROM jobs WHERE userid = ${userid}`, (err, res) => {
+  sql.query(`SELECT js.*,us.username FROM jobs js inner join user_details us on js.userid=us.id WHERE js.userid= ${userid}`, (err, res) => {
     if (err) {
       // console.log("error: ", err);
       result(err, null);
@@ -63,7 +63,9 @@ Jobs.findUserId = (userid, result) => {
 };
 
 Jobs.findAppliedUserById = (id, result) => {
-  sql.query(`select a.*, b.applieduserid ,b.id as jobseekerid, b.jobseekername,us.username from jobs a inner join job_seeker b  on a.id=b.jobid inner join user_details us on b.applieduserid=us.id where b.applieduserid=${id}`, (err, res) => {
+  console.log("Query Entering",id)
+  sql.query(`SELECT js.*,us.username FROM jobs js inner join job_seeker jbs on jbs.jobid=js.id inner join user_details us on js.userid=us.id WHERE js.userid=${id}`, (err, res) => {
+
     if (err) {
       // console.log("error: ", err);
       result(err, null);
