@@ -21,109 +21,128 @@ exports.create = (req, res) => {
     applieduserid:req.body.applieduserid,
     jobid:req.body.jobid  
   });
-
+  try{
   // Save Jobseeker in the database
   Jobseeker.create(jobseeker, (err, data) => {
-    if (err)
-      res.status(500).send({
-        status: 500,
-        error: err.message || "Some error occurred while creating the Jobseeker.",
-      });
-    else res.send({
+   
+   res.send({
       status: 200,
       error: null,
       response: "Created Successfully",
     });
+ 
   });
+}
+catch(err){
+  res.status(500).send({
+    status: 500,
+    error: err.message || "Some error occurred while creating the Jobseeker.",
+  });
+}
 };
 
 // Retrieve all Users from the database (with condition).
 exports.findAll = (req, res) => {
   const id = req.query.id;
-
+  try{
   Jobseeker.getAll(id, (err, data) => {
-    if (err)
-      res.status(500).send({
-        status: 500,
-        error: err.message || "Some error occurred while retrieving users.",
-      });
-    else res.send({
+   
+   
+    res.send({
       status: 200,
       error: null,
       response: data,
     });
+  
   });
+}catch(err){
+  res.status(500).send({
+    status: 500,
+    error: err.message || "Some error occurred while retrieving users.",
+  });
+}
 };
 
 // Find a single Jobseeker by Id
 exports.findOne = (req, res) => {
+  try{
   Jobseeker.findById(req.params.id, (err, results) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          status: 404,
-          error: `Not found Jobseeker with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          status: 500,
-          error: "Error retrieving Jobseeker with id " + req.params.id,
-        });
-      }
-    } 
+    
         res.send({
           status: 200,
           error: null,
           response: results,
         });
+      
   });
+}
+      
+  catch(err){
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        status: 404,
+        error: `Not found Jobseeker with id ${req.params.id}.`,
+      });
+    } else {
+      res.status(500).send({
+        status: 500,
+        error: "Error retrieving Jobseeker with id " + req.params.id,
+      });
+  }
+}
 };
 
 // Find a findUser
 exports.findAppliedUserById = (req, res) => {
+  try{
   Jobseeker.findAppliedUserId(req.params.applieduserid, (err, results) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          status: 404,
-          error: `Not found job with applieduserid ${req.params.applieduserid}.`,
-        });
-      } else {
-        res.status(500).send({
-          status: 500,
-          error: "Error retrieving job with applieduserid " + req.params.applieduserid,
-        });
-      }
-    }
+   
         res.send({
           status: 200,
           error: null,
           response:results,
         });
   });
+}catch(err){
+  if (err.kind === "not_found") {
+    res.status(404).send({
+      status: 404,
+      error: `Not found job with applieduserid ${req.params.applieduserid}.`,
+    });
+  } else {
+    res.status(500).send({
+      status: 500,
+      error: "Error retrieving job with applieduserid " + req.params.applieduserid,
+    });
+  }
+}
 };
 
 exports.findAppliedCandidate = (req, res) => {
+  try{
   Jobseeker.findAppliedCandidateById(req.params.id, (err, results) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          status: 404,
-          error: `Not found job with applieduserid ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          status: 500,
-          error: "Error retrieving job with applieduserid " + req.params.id,
-        });
-      }
-    }
+   
         res.send({
           status: 200,
           error: null,
           response:results,
         });
+     
   });
+}
+catch(err){
+  if (err.kind === "not_found") {
+    res.status(404).send({
+      status: 404,
+      error: `Not found job with applieduserid ${req.params.id}.`,
+    });
+  } else {
+    res.status(500).send({
+      status: 500,
+      error: "Error retrieving job with applieduserid " + req.params.id,
+    });
+  }
+}
 };
 
 // Update a Jobseeker identified by the id in the request
@@ -135,59 +154,64 @@ exports.update = (req, res) => {
       error: "Content can not be empty!",
     });
   }
-
+  try{
     Jobseeker.updateById(req.params.id, new Jobseeker(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          error: `Not found Jobseeker with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          error: "Error updating Jobseeker with id " + req.params.id,
-        });
-      }
-    } else res.send(data);
+  res.send(data);
   });
+}catch(err){
+  if (err.kind === "not_found") {
+    res.status(404).send({
+      error: `Not found Jobseeker with id ${req.params.id}.`,
+    });
+  } else {
+    res.status(500).send({
+      error: "Error updating Jobseeker with id " + req.params.id,
+    });
+}
+}
 };
 
 // Delete a Jobseeker with the specified id in the request
 exports.delete = (req, res) => {
+  try{
   Jobseeker.remove(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          status:404,
-          error: `Not found Jobseeker with id ${req.params.id}.`,
-        });
-      } else {
-        res.status(500).send({
-          status:500,
-          error: "Could not delete Jobseeker with id " + req.params.id,
-        });
-      }
-    } else
       res.send({
         status: 200,
         error: null,
         message: `Jobseeker was deleted successfully!`,
       });
+   
   });
+}catch(err){
+  if (err.kind === "not_found") {
+    res.status(404).send({
+      status:404,
+      error: `Not found Jobseeker with id ${req.params.id}.`,
+    });
+  } else {
+    res.status(500).send({
+      status:500,
+      error: "Could not delete Jobseeker with id " + req.params.id,
+    });
+  }
+}
 };
 
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
+  try{
   Jobseeker.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        status:500,
-        error: err.message || "Some error occurred while removing all users.",
-      });
-    else
       res.send({
         status: 200,
         error: null,
         message: `All Users were deleted successfully!`,
       });
+   
   });
+}catch(err){
+  res.status(500).send({
+    status:500,
+    error: err.message || "Some error occurred while removing all users.",
+  });
+}
 };
