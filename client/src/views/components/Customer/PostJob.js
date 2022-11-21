@@ -10,8 +10,11 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 import axios from "axios";
 import { Roles } from "../../util/Utils";
+import UpdateIcon from "@mui/icons-material/Update";
+import SaveIcon from "@mui/icons-material/Save";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const PostJob = ({ user,OncloseHandler }) => {
+const PostJob = ({ user, OncloseHandler,data }) => {
   const initialState = {
     jobdescription: "",
     location: "",
@@ -22,7 +25,7 @@ const PostJob = ({ user,OncloseHandler }) => {
     userid: user.id,
   };
 
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(data?.isEditMode===true ? data.editData:initialState);
 
   const onChangeHandler = (event, controlid, controlvalue) => {
     if (controlid === "fromdate" || controlid === "todate") {
@@ -52,7 +55,48 @@ const PostJob = ({ user,OncloseHandler }) => {
         theme: "light",
       });
     } else {
-      document.getElementById("btn_login").disabled = true;
+      document.getElementById("btn_save").disabled = true;
+
+      if (data?.isEditMode === true){
+        axios
+        .put(process.env.REACT_APP_ServerHost + `jobs/${state.id}`, {
+          ...state,
+          fromdate: dayjs(state.fromdate).format("YYYY-MM-DD"),
+          todate: dayjs(state.todate).format("YYYY-MM-DD"),
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success("Job Updated Successfully.", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setState(initialState);
+            OncloseHandler("Job Details");
+          }
+        })
+        .catch((ex) => {
+          toast.error("Failed to Save date.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        })
+        .finally(() => {
+          document.getElementById("btn_save").disabled = false;
+        });
+      }
+      else{
       axios
         .post(process.env.REACT_APP_ServerHost + `jobs`, {
           ...state,
@@ -87,12 +131,14 @@ const PostJob = ({ user,OncloseHandler }) => {
           });
         })
         .finally(() => {
-          document.getElementById("btn_login").disabled = false;
+          document.getElementById("btn_save").disabled = false;
         });
+      }
+
     }
   };
   return (
-    <Box
+    <>    <Box
       component="form"
       sx={{
         "& .MuiTextField-root": { m: 1, width: "25ch" },
@@ -152,28 +198,38 @@ const PostJob = ({ user,OncloseHandler }) => {
             onChange={onChangeHandler}
           />
 
-          <div style={{ marginTop: "1rem",padding:"5px" }}>
+          <div style={{ marginTop: "1rem", padding: "5px" }}>
             <Button
-              variant="contained"
-              id="btn_login"
+              name="save"
+              value={data?.isEditMode === true?'Update':"Save"}
+              id="btn_save"
               onClick={() => onSubmitHandler()}
-            >
-              Post Job
-            </Button>
-            </div>
-            {user?.userrole.toLowerCase() === Roles.Admin.toLocaleLowerCase() && ( <div style={{ marginTop: "1rem",padding:"5px" }}> 
-            <Button
               variant="contained"
-              id="btn_login"
-              onClick={() => OncloseHandler('Job Details')}
+              color="primary"
+              startIcon={data?.isEditMode ===true ? <UpdateIcon />:<SaveIcon />}
             >
-             Cancel
+             {data?.isEditMode ===true ?'Update':'Save'}
             </Button>
-
-          </div>)}
+          </div>
+          {user?.userrole.toLowerCase() === Roles.Admin.toLocaleLowerCase() && (
+            <div style={{ marginTop: "1rem", padding: "5px" }}>
+              <Button
+                name="cancel"
+                value="Cancel"
+                onClick={() => OncloseHandler("Job Details")}
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
+              >
+                Back
+              </Button>
+            </div>
+          )}
         </LocalizationProvider>
       </div>
     </Box>
+</>
+
   );
 };
 

@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
 import {toast} from 'react-toastify'
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -56,6 +55,8 @@ const reducer = (state, action) => {
       return { ...state, navBarTitle: action.payload };
     case "setSelectedJobData":
         return {...state,selectedJobData: action.payload}
+    case "setEditMode":
+        return {...state,...action.payload}
     default:
       return state;
   }
@@ -64,7 +65,6 @@ const reducer = (state, action) => {
 
 const Dashboard = (props) => {
   const history = useHistory();
-
 
   const [user, setUser] = React.useState(null);
   React.useEffect(() => {
@@ -171,18 +171,10 @@ const Dashboard = (props) => {
         width: 110,
         headerName: "",
         renderCell: (cellValues) => {
-          const { row, id } = cellValues;
           return (
-            <Link
-              to={{
-                pathname: "/editmember",
-                state: { row, id },
-              }}
-            >
-              <Button variant="outlined" startIcon={<EditIcon />}>
+              <Button variant="outlined" startIcon={<EditIcon />} onClick={()=>handleGridEditButton("Post Jobs",cellValues?.row)}>
                 Edit
               </Button>
-            </Link>
           );
         },
       },
@@ -314,6 +306,17 @@ const cookGridColumns = [
     if (title) dispatch({ type: "setNavBarTitle", payload: title });
   };
 
+  const handlePostJobClose = (title) => {
+    if (title) dispatch({ type: "setNavBarTitle", payload: title });
+    dispatch({ type:  "setEditMode", payload: {isEditMode:false,editData:null}});
+  };
+
+  const handleGridEditButton = (title,row) => {
+    dispatch({ type:  "setEditMode", payload: {isEditMode:true,editData:row}});
+    dispatch({ type: "setNavBarTitle", payload: title });
+ 
+  };
+
   const handleCloseUserMenu = (title) => {
     setAnchorElUser(null);
 
@@ -360,18 +363,18 @@ async function handleGridDeleteButton(data){
 }
 
   useEffect(() => {
-    conditionalRenderComponent();
-  }, [state.navBarTitle]);
+    if(user){
+     conditionalRenderComponent();
+    }
+  }, [user,state.navBarTitle]);
 
   const conditionalRenderComponent = () => {
-    if (state.navBarTitle === Navbar.Dashboard) {
-      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} user={user}  buttonText={'Add Job'}/>;
-    }
-    if (state.navBarTitle === Navbar.JobDetails) {
+
+    if (state.navBarTitle === Navbar.JobDetails || state.navBarTitle === Navbar.Dashboard) {
       return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} OnButtonClickHandler={()=>handleCloseNavMenu('Post Jobs')} />;
     }
     if (state.navBarTitle === Navbar.PostJobs) {
-      return <PostJobs user={user} OncloseHandler={handleCloseNavMenu}/>;
+      return <PostJobs user={user} OncloseHandler={handlePostJobClose} data={state}/>;
     }
     if (state.navBarTitle === Navbar.AppliedCandidates) {
       return <AppliedCandidates user={user}/>;
@@ -595,7 +598,7 @@ async function handleGridDeleteButton(data){
           </AppBar>
 
           <Box sx={{ flexGrow: 0 }}>
-            <div style={{ margin: "2%" }}>{conditionalRenderComponent()}</div>
+            <div style={{ margin: "2%" }}>{user && conditionalRenderComponent()}</div>
           </Box>
         </Box>
       </div>
