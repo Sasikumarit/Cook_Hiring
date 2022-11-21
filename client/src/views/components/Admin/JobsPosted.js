@@ -1,13 +1,9 @@
 import * as React from "react";
-import { useHistory } from "react-router-dom";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 import { DateTime } from "luxon";
 
 const JobsPosted = (props) => {
-  const history = useHistory();
-  console.log("props", props);
-
   const [state, setState] = React.useState({ columns: [], rows: [] });
 
   React.useEffect(() => {

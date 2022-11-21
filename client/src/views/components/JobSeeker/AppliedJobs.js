@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useHistory } from "react-router-dom";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 import { DateTime } from "luxon";
@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import {toast} from 'react-toastify'
 
 const AppliedJobs = ({user}) => {
-  const history = useHistory();
   
   const [state, setState] = React.useState({ columns:user?.userrole.toLowerCase() === Roles.Admin.toLowerCase()?  [
     { field: "sno", headerName: "S.No", width: 90 },
