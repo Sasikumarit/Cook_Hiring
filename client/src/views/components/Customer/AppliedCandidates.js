@@ -6,6 +6,11 @@ import Axios from "axios";
 const AppliedCandidates = ({user}) => {
 
   const [state, setState] = React.useState({ columns: [], rows: [] });
+  const config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
 
   React.useEffect(() => {
     const columns = [
@@ -51,7 +56,7 @@ const AppliedCandidates = ({user}) => {
     ];
 
     async function fetch() {
-        await Axios.get(process.env.REACT_APP_ServerHost + `jobseeker/findAppliedCandidate/${user.id}`).then((res) => {
+        await Axios.get(process.env.REACT_APP_ServerHost + `jobseeker/findAppliedCandidate/${user.id}`,config).then((res) => {
           if (res.status === 200) {
             setState({ columns: columns, rows: res.data.response });
             return res.data.response;

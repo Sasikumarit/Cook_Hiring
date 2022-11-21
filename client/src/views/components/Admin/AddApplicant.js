@@ -91,7 +91,7 @@ const AddApplicant = ({user,handleGridEditButton}) => {
       },
     },
   ] , rows: [] });
-  
+
   const config = {
     headers:{
         Authorization: user?.token,
@@ -136,7 +136,7 @@ async function handleGridDeleteButton(data){
 
   React.useEffect(() => {
     async function fetch() {
-      await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Admin.toLowerCase()?'jobseeker/findAllAppliedCandidate/1':'jobs/findAppliedUser/'+ user.id}`).then((res) => {
+      await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Admin.toLowerCase()?'jobseeker/findAllAppliedCandidate/1':'jobs/findAppliedUser/'+ user.id}`,config).then((res) => {
         if (res.status === 200) {
           setState({...state, rows: res.data.response });
           return res.data.response;

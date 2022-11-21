@@ -24,13 +24,18 @@ const ApplicationForm=({user,data,handleCloseNavMenu,selectedJobData})=> {
 
   const [state, setState]=useState(data?.isEditMode===true ? data.editData:initialState);
 
+  const config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
+
   const onChangeHandler=(event)=>{
     const {id,value}=event.target;
     setState({...state,[id]:value})
   }
 
   const onSubmitHandler=()=>{
-    debugger 
     if(_.isEmpty(state.jobseekername)||_.isEmpty(state.location)||_.isEmpty(state.mobileno)||_.isEmpty(state.email)||_.isEmpty(state.yearofxp)){
       console.log(_.isEmpty(state.jobseekername),_.isEmpty(state.location),_.isEmpty(state.mobileno),_.isEmpty(state.email),_.isEmpty(state.yearofxp))
       toast.error("Please enter all manadatory data", {
@@ -48,7 +53,7 @@ const ApplicationForm=({user,data,handleCloseNavMenu,selectedJobData})=> {
       document.getElementById("btn_save").disabled = true;
       if (data?.isEditMode === true){
 
-        axios.put(process.env.REACT_APP_ServerHost + `jobseeker/${state.id}`,state)
+        axios.put(process.env.REACT_APP_ServerHost + `jobseeker/${state.id}`,state,config)
         .then((res) => {
           if (res.status === 200) {
             toast.success("Applicant Updated Successfully.", {
@@ -83,7 +88,7 @@ const ApplicationForm=({user,data,handleCloseNavMenu,selectedJobData})=> {
       }
       else{
      
-      axios.post(process.env.REACT_APP_ServerHost + `jobseeker`,state)
+      axios.post(process.env.REACT_APP_ServerHost + `jobseeker`,state,config)
       .then((res) => {
         if (res.status === 200) {
           toast.success("JobSeeker Saved Successfully.", {

@@ -3,8 +3,13 @@ import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 import { DateTime } from "luxon";
 
-const JobsPosted = (props) => {
+const JobsPosted = ({user}) => {
   const [state, setState] = React.useState({ columns: [], rows: [] });
+  const config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
 
   React.useEffect(() => {
     const columns = [
@@ -54,7 +59,7 @@ const JobsPosted = (props) => {
     ];
 
     async function fetch() {
-      await Axios.get(process.env.REACT_APP_ServerHost + `jobs`).then((res) => {
+      await Axios.get(process.env.REACT_APP_ServerHost + `jobs`,config).then((res) => {
         if (res.status === 200) {
           setState({ columns: columns, rows: res.data.response });
           return res.data.response;

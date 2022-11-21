@@ -290,7 +290,6 @@ const cookGridColumns = [
        
 
         await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user?.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`,config).then((res) => {
-           debugger
             if (res.status === 200) {
               dispatch({
                 type: "setGridRowData",
