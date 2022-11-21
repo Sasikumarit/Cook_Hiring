@@ -26,6 +26,11 @@ const PostJob = ({ user, OncloseHandler,data }) => {
   };
 
   const [state, setState] = useState(data?.isEditMode===true ? data.editData:initialState);
+  const config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
 
   const onChangeHandler = (event, controlid, controlvalue) => {
     if (controlid === "fromdate" || controlid === "todate") {
@@ -63,7 +68,7 @@ const PostJob = ({ user, OncloseHandler,data }) => {
           ...state,
           fromdate: dayjs(state.fromdate).format("YYYY-MM-DD"),
           todate: dayjs(state.todate).format("YYYY-MM-DD"),
-        })
+        },config)
         .then((res) => {
           if (res.status === 200) {
             toast.success("Job Updated Successfully.", {
@@ -102,7 +107,7 @@ const PostJob = ({ user, OncloseHandler,data }) => {
           ...state,
           fromdate: dayjs(state.fromdate).format("YYYY-MM-DD"),
           todate: dayjs(state.todate).format("YYYY-MM-DD"),
-        })
+        },config)
         .then((res) => {
           if (res.status === 200) {
             toast.success("Job Saved Successfully.", {

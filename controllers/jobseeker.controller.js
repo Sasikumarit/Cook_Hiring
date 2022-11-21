@@ -22,6 +22,10 @@ exports.create = (req, res) => {
     jobid:req.body.jobid  
   });
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   // Save Jobseeker in the database
   Jobseeker.create(jobseeker, (err, data) => {
    
@@ -32,6 +36,7 @@ exports.create = (req, res) => {
     });
  
   });
+}
 }
 catch(err){
   res.status(500).send({
@@ -45,6 +50,11 @@ catch(err){
 exports.findAll = (req, res) => {
   const id = req.query.id;
   try{
+
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.getAll(id, (err, data) => {
    
    
@@ -55,6 +65,7 @@ exports.findAll = (req, res) => {
     });
   
   });
+}
 }catch(err){
   res.status(500).send({
     status: 500,
@@ -66,6 +77,10 @@ exports.findAll = (req, res) => {
 // Find a single Jobseeker by Id
 exports.findOne = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.findById(req.params.id, (err, results) => {
     
         res.send({
@@ -75,6 +90,7 @@ exports.findOne = (req, res) => {
         });
       
   });
+}
 }
       
   catch(err){
@@ -95,6 +111,10 @@ exports.findOne = (req, res) => {
 // Find a findUser
 exports.findAppliedUserById = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.findAppliedUserId(req.params.applieduserid, (err, results) => {
    
         res.send({
@@ -103,6 +123,7 @@ exports.findAppliedUserById = (req, res) => {
           response:results,
         });
   });
+}
 }catch(err){
   if (err.kind === "not_found") {
     res.status(404).send({
@@ -120,6 +141,10 @@ exports.findAppliedUserById = (req, res) => {
 
 exports.findAppliedCandidate = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.findAppliedCandidateById(req.params.id, (err, results) => {
    
         res.send({
@@ -129,6 +154,7 @@ exports.findAppliedCandidate = (req, res) => {
         });
      
   });
+}
 }
 catch(err){
   if (err.kind === "not_found") {
@@ -147,6 +173,10 @@ catch(err){
 
 exports.findAllAppliedCandidate = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.findAllAppliedCandidateById(req.params.id, (err, results) => {
    
         res.send({
@@ -156,6 +186,7 @@ exports.findAllAppliedCandidate = (req, res) => {
         });
      
   });
+}
 }
 catch(err){
   if (err.kind === "not_found") {
@@ -182,9 +213,14 @@ exports.update = (req, res) => {
     });
   }
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobseeker.updateById(req.params.id, new Jobseeker(req.body), (err, data) => {
   res.send(data);
   });
+}
 }catch(err){
   if (err.kind === "not_found") {
     res.status(404).send({
@@ -201,6 +237,10 @@ exports.update = (req, res) => {
 // Delete a Jobseeker with the specified id in the request
 exports.delete = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.remove(req.params.id, (err, data) => {
       res.send({
         status: 200,
@@ -209,6 +249,7 @@ exports.delete = (req, res) => {
       });
    
   });
+}
 }catch(err){
   if (err.kind === "not_found") {
     res.status(404).send({
@@ -227,6 +268,10 @@ exports.delete = (req, res) => {
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
   try{
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
   Jobseeker.removeAll((err, data) => {
       res.send({
         status: 200,
@@ -235,6 +280,7 @@ exports.deleteAll = (req, res) => {
       });
    
   });
+}
 }catch(err){
   res.status(500).send({
     status:500,

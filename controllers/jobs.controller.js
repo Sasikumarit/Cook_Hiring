@@ -41,8 +41,14 @@ exports.create = (req, res) => {
 
 // Retrieve all Jobs from the database (with condition).
 exports.findAll = (req, res) => {
+
   const id = req.query.id;
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
+        //return res.send("Successfully Verified");
     Jobs.getAll(id, (err, data) => {
       res.send({
         status: 200,
@@ -50,6 +56,14 @@ exports.findAll = (req, res) => {
         response: data,
       });
     });
+
+  } else {
+    // Access Denied
+    return res.status(401).send({
+      status: 500,
+      error: err.message || "Some error occurred while retrieving jobs.",
+    });
+  }
   } catch (err) {
     res.status(500).send({
       status: 500,
@@ -61,6 +75,10 @@ exports.findAll = (req, res) => {
 // Find a single Job by Id
 exports.findOne = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.findById(req.params.id, (err, results) => {
       res.send({
         status: 200,
@@ -68,6 +86,7 @@ exports.findOne = (req, res) => {
         response: results,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -86,6 +105,11 @@ exports.findOne = (req, res) => {
 // Find a findUser
 exports.findUser = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
+
     Jobs.findUserId(req.params.userid, (err, results) => {
       res.send({
         status: 200,
@@ -93,6 +117,7 @@ exports.findUser = (req, res) => {
         response: results,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -111,6 +136,10 @@ exports.findUser = (req, res) => {
 // Find a single Job by Id
 exports.findAppliedUser = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.findAppliedUserById(req?.params?.id, (err, results) => {
       res.send({
         status: 200,
@@ -118,6 +147,7 @@ exports.findAppliedUser = (req, res) => {
         response: results,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -135,6 +165,10 @@ exports.findAppliedUser = (req, res) => {
 
 exports.findAllAppliedUser = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.findAllAppliedUserById(req, (err, results) => {
       res.send({
         status: 200,
@@ -142,6 +176,7 @@ exports.findAllAppliedUser = (req, res) => {
         response: results || [],
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -159,6 +194,11 @@ exports.findAllAppliedUser = (req, res) => {
 
 exports.findJobByUser = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+  
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.findJobByUserId(req.params.id, (err, results) => {
       res.send({
         status: 200,
@@ -166,6 +206,7 @@ exports.findJobByUser = (req, res) => {
         response: results,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -191,9 +232,14 @@ exports.update = (req, res) => {
     });
   }
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.updateById(req.params.id, new Jobs(req.body), (err, data) => {
       res.send(data);
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -210,6 +256,10 @@ exports.update = (req, res) => {
 // Delete a Job with the specified id in the request
 exports.delete = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.remove(req.params.id, (err, data) => {
       res.send({
         status: 200,
@@ -217,6 +267,7 @@ exports.delete = (req, res) => {
         message: `job was deleted successfully!`,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -235,6 +286,10 @@ exports.delete = (req, res) => {
 // Delete all Job from the database.
 exports.deleteAll = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     Jobs.removeAll((err, data) => {
       res.send({
         status: 200,
@@ -242,6 +297,7 @@ exports.deleteAll = (req, res) => {
         message: `All jobs were deleted successfully!`,
       });
     });
+  }
   } catch (err) {
     res.status(500).send({
       status: 500,

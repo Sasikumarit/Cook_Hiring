@@ -33,7 +33,6 @@ const LoginPage = () => {
       Axios.post(process.env.REACT_APP_ServerHost + `users/login`, state)
         .then((response) => {
           if (response?.data?.response) {
-            localStorage.setItem('currentUser', JSON.stringify(response.data.response));
             setState(initialState);
             history.push({pathname:'/dashboard',state:{...response.data.response}})
           

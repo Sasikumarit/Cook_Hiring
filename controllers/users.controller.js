@@ -42,6 +42,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const email = req.query.email;
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     User.getAll(email, (err, data) => {
       res.send({
         status: 200,
@@ -49,6 +53,7 @@ exports.findAll = (req, res) => {
         response: data,
       });
     });
+  }
   } catch (err) {
     res.status(500).send({
       status: 500,
@@ -142,9 +147,14 @@ exports.update = (req, res) => {
   }
 
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     User.updateById(req.params.id, new User(req.body), (err, data) => {
       res.send(data);
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -161,6 +171,10 @@ exports.update = (req, res) => {
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     User.remove(req.params.id, (err, data) => {
       res.send({
         status: 200,
@@ -168,6 +182,7 @@ exports.delete = (req, res) => {
         message: `User was deleted successfully!`,
       });
     });
+  }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -186,6 +201,10 @@ exports.delete = (req, res) => {
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
   try {
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const token = req.get('Authorization');
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
     User.removeAll((err, data) => {
       res.send({
         status: 200,
@@ -193,6 +212,7 @@ exports.deleteAll = (req, res) => {
         message: `All Users were deleted successfully!`,
       });
     });
+  }
   } catch (err) {
     res.status(500).send({
       status: 500,

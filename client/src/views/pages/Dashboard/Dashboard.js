@@ -67,9 +67,9 @@ const Dashboard = (props) => {
   const history = useHistory();
 
   const [user, setUser] = React.useState(null);
+  console.log("user",user)
   React.useEffect(() => {
     if (!history?.location?.state) {
-      localStorage.removeItem("currentUser");
       history.push("/");
     } else {
       setUser(history.location.state);
@@ -271,6 +271,12 @@ const cookGridColumns = [
         selectedJobData:null,
       };
 
+      const config = {
+        headers:{
+            Authorization: user?.token,
+        }
+      };
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   
@@ -279,8 +285,12 @@ const cookGridColumns = [
  
 
   React.useEffect(() => {
+
     async function fetch(){
-        await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user?.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`).then((res) => {
+       
+
+        await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user?.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`,config).then((res) => {
+           debugger
             if (res.status === 200) {
               dispatch({
                 type: "setGridRowData",
@@ -288,10 +298,21 @@ const cookGridColumns = [
               });
               return res.data.response;
             }
-            return res;
-          });
+            return res
+          }).catch((err)=>{
+            toast.error(err?.response?.data?.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+          })
     }
-        fetch()     
+      user&& fetch()     
   }, [user,state.navBarTitle]);
 
   const handleOpenNavMenu = (event) => {
@@ -321,7 +342,6 @@ const cookGridColumns = [
     setAnchorElUser(null);
 
     if (title === "Logout") {
-      localStorage.removeItem("currentUser");
       history.push("/");
     }
   };
@@ -332,7 +352,7 @@ async function handleGridDeleteButton(data){
   );
 
   if(choice){
-    await Axios.delete(process.env.REACT_APP_ServerHost + `jobs/${data?.id}`).then((res) => {
+    await Axios.delete(process.env.REACT_APP_ServerHost + `jobs/${data?.id}`,config).then((res) => {
         if (res.status === 200) {
             toast.success("Job Successfully Deleted.", {
                 position: "top-right",
@@ -371,7 +391,7 @@ async function handleGridDeleteButton(data){
   const conditionalRenderComponent = () => {
 
     if (state.navBarTitle === Navbar.JobDetails || state.navBarTitle === Navbar.Dashboard) {
-      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} OnButtonClickHandler={()=>handleCloseNavMenu('Post Jobs')} />;
+      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} OnButtonClickHandler={()=>handleCloseNavMenu('Post Jobs')} isAddButton={user?.userrole.toLowerCase() === Roles.Admin.toLocaleLowerCase()?true:false}/>;
     }
     if (state.navBarTitle === Navbar.PostJobs) {
       return <PostJobs user={user} OncloseHandler={handlePostJobClose} data={state}/>;
@@ -386,10 +406,10 @@ async function handleGridDeleteButton(data){
         return <JobsPosted user={user}/>;
       }
       if (state.navBarTitle === Navbar.ApplicationForm) {
-        return <ApplicationForm user={user} handleCloseNavMenu={handleCloseNavMenu} selectedJobData={state.selectedJobData}/>;
+        return <ApplicationForm user={user} data={state} handleCloseNavMenu={handleCloseNavMenu} selectedJobData={state.selectedJobData}/>;
       }
       if(state.navBarTitle === Navbar.ApplicantDetails){
-        return <AddApplicant user={user}/>;
+        return <AddApplicant user={user} handleGridEditButton={handleGridEditButton}/>;
       }
     return <div></div>;
   };

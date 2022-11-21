@@ -6,12 +6,12 @@ import { Roles } from "../../util/Utils";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Link } from "react-router-dom";
 import {toast} from 'react-toastify'
 
-const AddApplicant = ({user}) => {
+const AddApplicant = ({user,handleGridEditButton}) => {
   
-  const [state, setState] = React.useState({ columns:[
+  const [state, setState] = React.useState({
+     columns:[
     { field: "sno", headerName: "S.No", width: 90 },
     {
       field: "jobseekername",
@@ -52,22 +52,21 @@ const AddApplicant = ({user}) => {
       editable: false,
     },
     {
+      field: "jobdescription",
+      headerName: "Job Description",
+      width: 110,
+      editable: false,
+      
+    },
+    {
       field: "Edit",
       width: 110,
       headerName: "",
       renderCell: (cellValues) => {
-        const { row, id } = cellValues;
         return (
-          <Link
-            to={{
-              pathname: "/editmember",
-              state: { row, id },
-            }}
-          >
-            <Button variant="outlined" startIcon={<EditIcon />}>
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={()=>handleGridEditButton('ApplicationForm',cellValues?.row)}>
               Edit
             </Button>
-          </Link>
         );
       },
     },
@@ -92,7 +91,12 @@ const AddApplicant = ({user}) => {
       },
     },
   ] , rows: [] });
-
+  
+  const config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
 
  
 async function handleGridDeleteButton(data){
@@ -100,7 +104,7 @@ async function handleGridDeleteButton(data){
     `Are you sure you want to delete ${data.jobseekername}'s record?`
   );
   if(choice){
-  await Axios.delete(process.env.REACT_APP_ServerHost + `jobseeker/${data?.id}`).then((res) => {
+  await Axios.delete(process.env.REACT_APP_ServerHost + `jobseeker/${data?.id}`, config).then((res) => {
       if (res.status === 200) {
           toast.success("Applicant Successfully Deleted.", {
               position: "top-right",
@@ -144,8 +148,8 @@ async function handleGridDeleteButton(data){
   }, []);
 
   return (
-    <div style={{ width: "85%", margin: "2%" }}>
-      <CustomDataGrid columns={state.columns} rows={state.rows} user={user} buttonText={'Add Applicant'} />
+    <div style={{ width: "95%" }}>
+      <CustomDataGrid columns={state.columns} rows={state.rows} user={user} isAddButton={false} />
     </div>
   );
 };

@@ -6,27 +6,33 @@ import Grid from '@mui/material/Grid';
 import _ from 'lodash'
 import axios from "axios";
 import { toast } from "react-toastify";
+import UpdateIcon from "@mui/icons-material/Update";
+import SaveIcon from "@mui/icons-material/Save";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Roles } from '../../util/Utils';
 
-const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
+const ApplicationForm=({user,data,handleCloseNavMenu,selectedJobData})=> {
   const initialState={
-    jobseekername:user.username,
+    jobseekername:user?.username,
     location:'',
     mobileno:user.mobileno,
     email:user.email,
     yearofxp:'',
-    applieduserid:user.id,
-    jobid:selectedJobData.id
+    applieduserid:user?.id,
+    jobid:selectedJobData?.id
   }
 
-  const [state, setState]=useState(initialState);
+  const [state, setState]=useState(data?.isEditMode===true ? data.editData:initialState);
 
-  const onChangeHandler=(event,controlid,controlvalue)=>{
+  const onChangeHandler=(event)=>{
     const {id,value}=event.target;
     setState({...state,[id]:value})
   }
 
   const onSubmitHandler=()=>{
+    debugger 
     if(_.isEmpty(state.jobseekername)||_.isEmpty(state.location)||_.isEmpty(state.mobileno)||_.isEmpty(state.email)||_.isEmpty(state.yearofxp)){
+      console.log(_.isEmpty(state.jobseekername),_.isEmpty(state.location),_.isEmpty(state.mobileno),_.isEmpty(state.email),_.isEmpty(state.yearofxp))
       toast.error("Please enter all manadatory data", {
         position: "top-right",
         autoClose: 5000,
@@ -39,11 +45,48 @@ const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
       });
     }
     else{
-      document.getElementById("btn_login").disabled = true;
+      document.getElementById("btn_save").disabled = true;
+      if (data?.isEditMode === true){
+
+        axios.put(process.env.REACT_APP_ServerHost + `jobseeker/${state.id}`,state)
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success("Applicant Updated Successfully.", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setState(initialState)
+            handleCloseNavMenu("Applicant Details");
+          }
+        })
+        .catch((ex) => {
+          toast.error("Failed to Save date.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        })
+        .finally(() => {
+          document.getElementById("btn_save").disabled = false;
+        });
+      }
+      else{
+     
       axios.post(process.env.REACT_APP_ServerHost + `jobseeker`,state)
       .then((res) => {
         if (res.status === 200) {
-          toast.success("Job Saved Successfully.", {
+          toast.success("JobSeeker Saved Successfully.", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -70,9 +113,10 @@ const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
         });
       })
       .finally(() => {
-        document.getElementById("btn_login").disabled = false;
+        document.getElementById("btn_save").disabled = false;
       });
     }
+  }
   }
 
   return (
@@ -99,11 +143,37 @@ const ApplicationForm=({user,handleCloseNavMenu,selectedJobData})=> {
           }}
           onChange={onChangeHandler} 
         />
-        <Grid container justifyContent="flex-end">
-          <Button variant="contained" id="btn_login" onClick={()=> onSubmitHandler()}>Apply</Button>
-        </Grid>
-      </div>
-    </Box>
+        
+            <Button
+              name="save"
+              value={data?.isEditMode === true?'Update':"Save"}
+              id="btn_save"
+              onClick={() => onSubmitHandler()}
+              variant="contained"
+              color="primary"
+              startIcon={data?.isEditMode ===true ? <UpdateIcon />:<SaveIcon />}
+              style={{height:'40px',marginTop:'1rem'}}
+            >
+             {data?.isEditMode ===true ?'Update':'Apply'}
+            </Button>
+        
+          {user?.userrole.toLowerCase() === Roles.Admin.toLocaleLowerCase() && (
+              <Button
+                name="cancel"
+                value="Cancel"
+                onClick={() => handleCloseNavMenu("Applicant Details")}
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
+                style={{height:'40px',marginTop:'1rem',marginLeft:'1rem'}}
+              >
+                Back
+              </Button>
+          
+           
+          )}
+          </div>
+    </Box> 
   );
 }
 

@@ -91,7 +91,7 @@ where  j.userid = ${id}`, (err, res) => {
 Jobseeker.findAllAppliedCandidateById = (id, result) => {
   sql.query(`select row_number() over(order by js.id) as sno,js.jobid 
   , js.id, js.jobseekername, js.location, js.mobileno, js.email as email, js.yearofxp,js.applieduserid,j.userid
-  , ud2.username, ud2.email as useremail
+  , ud2.username, ud2.email as useremail,j.jobdescription
   from job_seeker js
   inner join jobs j on js.jobid = j.id
   inner join user_details ud1 on js.applieduserid = ud1.id
