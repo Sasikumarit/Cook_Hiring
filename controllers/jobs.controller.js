@@ -259,6 +259,7 @@ exports.delete = (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
     const token = req.get('Authorization');
       const verified = jwt.verify(token, jwtSecretKey);
+     
       if (verified) {
     Jobs.remove(req.params.id, (err, data) => {
       res.send({

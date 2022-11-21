@@ -63,11 +63,11 @@ const reducer = (state, action) => {
 };
 
 
-const Dashboard = (props) => {
+const Dashboard = () => {
   const history = useHistory();
 
-  const [user, setUser] = React.useState(null);
-  console.log("user",user)
+  const [user, setUser] = React.useState(history?.location?.state);
+
   React.useEffect(() => {
     if (!history?.location?.state) {
       history.push("/");
@@ -271,23 +271,27 @@ const cookGridColumns = [
         selectedJobData:null,
       };
 
-      const config = {
-        headers:{
-            Authorization: user?.token,
-        }
-      };
+    
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
- 
+  let config = {
+    headers:{
+        Authorization: user?.token,
+    }
+  };
 
   React.useEffect(() => {
 
     async function fetch(){
-       
+        config = {
+            headers:{
+                Authorization: user?.token,
+            }
+          };
 
         await Axios.get(process.env.REACT_APP_ServerHost + `${user?.userrole.toLowerCase() === Roles.Cook.toLocaleLowerCase()? 'jobs/findJobByUser/'+user.id : user?.userrole.toLowerCase() === Roles.Customer.toLocaleLowerCase()? 'jobs/findUser/'+user.id :'jobs'}`,config).then((res) => {
             if (res.status === 200) {
@@ -377,8 +381,19 @@ async function handleGridDeleteButton(data){
               });
         }
         return res;
-      });
-    }
+      }).catch((err)=>{
+        toast.error(err?.response?.data?.error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+    })
+  };
 }
 
   useEffect(() => {

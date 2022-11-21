@@ -2,7 +2,6 @@ import React,{useState} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import _ from 'lodash'
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -37,7 +36,6 @@ const ApplicationForm=({user,data,handleCloseNavMenu,selectedJobData})=> {
 
   const onSubmitHandler=()=>{
     if(_.isEmpty(state.jobseekername)||_.isEmpty(state.location)||_.isEmpty(state.mobileno)||_.isEmpty(state.email)||_.isEmpty(state.yearofxp)){
-      console.log(_.isEmpty(state.jobseekername),_.isEmpty(state.location),_.isEmpty(state.mobileno),_.isEmpty(state.email),_.isEmpty(state.yearofxp))
       toast.error("Please enter all manadatory data", {
         position: "top-right",
         autoClose: 5000,
