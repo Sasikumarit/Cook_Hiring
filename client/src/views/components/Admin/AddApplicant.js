@@ -1,8 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useHistory } from "react-router-dom";
-import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
+import CustomDataGrid from "../CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
-import { DateTime } from "luxon";
 import { Roles } from "../../util/Utils";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -10,10 +9,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import {toast} from 'react-toastify'
 
-const AppliedJobs = ({user}) => {
-  const history = useHistory();
+const AddApplicant = ({user}) => {
   
-  const [state, setState] = React.useState({ columns:user?.userrole.toLowerCase() === Roles.Admin.toLowerCase()?  [
+  const [state, setState] = React.useState({ columns:[
     { field: "sno", headerName: "S.No", width: 90 },
     {
       field: "jobseekername",
@@ -93,50 +91,7 @@ const AppliedJobs = ({user}) => {
         );
       },
     },
-  ] : [
-    { field: "sno", headerName: "S.No", width: 90 },
-    {
-      field: "jobdescription",
-      headerName: "Job Description",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "wageperday",
-      headerName: "Wage Per Day",
-      type: "number",
-      width: 110,
-      editable: false,
-    },
-    {
-      field: "location",
-      headerName: "Location",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "fromdate",
-      headerName: "From Date",
-      width: 150,
-      editable: false,
-      valueGetter: (params) =>
-        `${DateTime.fromISO(params.row.fromdate).toFormat("dd-MM-yyyy")}`,
-    },
-    {
-      field: "todate",
-      headerName: "To Date",
-      width: 110,
-      editable: false,
-      valueGetter: (params) =>
-        `${DateTime.fromISO(params.row.todate).toFormat("dd-MM-yyyy")}`,
-    },
-    {
-      field: "username",
-      headerName: "User Name",
-      width: 110,
-      editable: false,
-    },
-  ], rows: [] });
+  ] , rows: [] });
 
 
  
@@ -195,4 +150,4 @@ async function handleGridDeleteButton(data){
   );
 };
 
-export default AppliedJobs;
+export default AddApplicant;

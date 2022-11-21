@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { lazy, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -37,8 +38,11 @@ import('../../components/Admin/JobsPosted')
 const ApplicationForm =lazy(() =>
 import("../../components/JobSeeker/ApplicationForm")
 );
+const AddApplicant=lazy(() =>
+import('../../components/Admin/AddApplicant')
+);
 
-const adminPages = ["Dashboard", "Applied Jobs"];
+const adminPages = ["Job Details", "Applicant Details"];
 const customerPages = ["Dashboard", "Post Jobs", "Applied Candidates"];
 const jobseekerPages = ["Dashboard", "Applied Jobs"];
 const settings = ["Profile", "Logout"];
@@ -60,6 +64,17 @@ const reducer = (state, action) => {
 
 const Dashboard = (props) => {
   const history = useHistory();
+
+
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => {
+    if (!history?.location?.state) {
+      localStorage.removeItem("currentUser");
+      history.push("/");
+    } else {
+      setUser(history.location.state);
+    }
+  }, []);
 
   const jobGridColumns = [
     { field: "sno", headerName: "S.No", width: 90 },
@@ -181,7 +196,7 @@ const Dashboard = (props) => {
               variant="contained"
               color="primary"
               onClick={(event) => {
-                handleGridDeleteButton(cellValues?.row?.id)
+                handleGridDeleteButton(cellValues?.row)
               }}
               startIcon={<DeleteIcon />}
               fullWidth={true}
@@ -260,23 +275,16 @@ const cookGridColumns = [
         cookGridColumns: cookGridColumns,
         adminGridColumns: adminGridColumns,
         rows: [],
-        navBarTitle: "Dashboard",
+        navBarTitle: user?.userrole.toLowerCase() === Roles.Admin.toLocaleLowerCase()?'Job Details' :"Dashboard",
         selectedJobData:null,
       };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  React.useEffect(() => {
-    if (!history?.location?.state) {
-      localStorage.removeItem("currentUser");
-      history.push("/");
-    } else {
-      setUser(history.location.state);
-    }
-  }, []);
+ 
 
   React.useEffect(() => {
     async function fetch(){
@@ -315,8 +323,13 @@ const cookGridColumns = [
     }
   };
 
-async function handleGridDeleteButton(id){
-    await Axios.delete(process.env.REACT_APP_ServerHost + `jobs/${id}`).then((res) => {
+async function handleGridDeleteButton(data){
+  let choice = window.confirm(
+    `Are you sure you want to delete ${data.jobdescription}'s record?`
+  );
+
+  if(choice){
+    await Axios.delete(process.env.REACT_APP_ServerHost + `jobs/${data?.id}`).then((res) => {
         if (res.status === 200) {
             toast.success("Job Successfully Deleted.", {
                 position: "top-right",
@@ -343,6 +356,7 @@ async function handleGridDeleteButton(id){
         }
         return res;
       });
+    }
 }
 
   useEffect(() => {
@@ -351,10 +365,13 @@ async function handleGridDeleteButton(id){
 
   const conditionalRenderComponent = () => {
     if (state.navBarTitle === Navbar.Dashboard) {
-      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} />;
+      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} user={user}  buttonText={'Add Job'}/>;
+    }
+    if (state.navBarTitle === Navbar.JobDetails) {
+      return <CustomDataGrid columns={getDatagridColumn()} rows={state.rows} buttonText={'Add Job'} user={user} OnButtonClickHandler={()=>handleCloseNavMenu('Post Jobs')} />;
     }
     if (state.navBarTitle === Navbar.PostJobs) {
-      return <PostJobs user={user} />;
+      return <PostJobs user={user} OncloseHandler={handleCloseNavMenu}/>;
     }
     if (state.navBarTitle === Navbar.AppliedCandidates) {
       return <AppliedCandidates user={user}/>;
@@ -367,6 +384,9 @@ async function handleGridDeleteButton(id){
       }
       if (state.navBarTitle === Navbar.ApplicationForm) {
         return <ApplicationForm user={user} handleCloseNavMenu={handleCloseNavMenu} selectedJobData={state.selectedJobData}/>;
+      }
+      if(state.navBarTitle === Navbar.ApplicantDetails){
+        return <AddApplicant user={user}/>;
       }
     return <div></div>;
   };

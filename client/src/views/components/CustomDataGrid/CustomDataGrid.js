@@ -9,7 +9,7 @@ const CustomDataGrid=({columns,rows,title,user,buttonText,OnButtonClickHandler})
     <Box sx={{ height: 400, width: '95%' }}>
       <h1>{title}</h1>
      {user?.userrole.toLowerCase()==="admin" &&( <div>
-      <Button variant="outlined" startIcon={<AddIcon />}>
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={()=>OnButtonClickHandler()}>
            {buttonText}
           </Button>
           </div>)}

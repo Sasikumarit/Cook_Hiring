@@ -1,10 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useHistory } from "react-router-dom";
 import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
 import Axios from "axios";
 
 const AppliedCandidates = ({user}) => {
-  const history = useHistory();
 
   const [state, setState] = React.useState({ columns: [], rows: [] });
 
