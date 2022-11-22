@@ -25,11 +25,17 @@ exports.create = (req, res) => {
   // Save Job in the database
   try {
     Jobs.create(job, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: "Created Successfully",
-      });
+      if (err)
+        res.status(500).send({
+          status: 500,
+          error: err.message || "Some error occurred while creating the job.",
+        });
+      else
+        res.send({
+          status: 200,
+          error: null,
+          response: "Created Successfully",
+        });
     });
   } catch (err) {
     res.status(500).send({
@@ -41,29 +47,32 @@ exports.create = (req, res) => {
 
 // Retrieve all Jobs from the database (with condition).
 exports.findAll = (req, res) => {
-
   const id = req.query.id;
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-        //return res.send("Successfully Verified");
-    Jobs.getAll(id, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: data,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.getAll(id, (err, data) => {
+        if (err)
+          res.status(500).send({
+            status: 500,
+            error: err.message || "Some error occurred while retrieving jobs.",
+          });
+        else
+          res.send({
+            status: 200,
+            error: null,
+            response: data,
+          });
       });
-    });
-
-  } else {
-    // Access Denied
-    return res.status(401).send({
-      status: 500,
-      error: err.message || "Some error occurred while retrieving jobs.",
-    });
-  }
+    } else {
+      // Access Denied
+      return res.status(401).send({
+        status: 500,
+        error: err.message || "Some error occurred while retrieving jobs.",
+      });
+    }
   } catch (err) {
     res.status(500).send({
       status: 500,
@@ -76,17 +85,30 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.findById(req.params.id, (err, results) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: results,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.findById(req.params.id, (err, results) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found job with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Error retrieving job with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: results,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -106,18 +128,30 @@ exports.findOne = (req, res) => {
 exports.findUser = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-
-    Jobs.findUserId(req.params.userid, (err, results) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: results,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.findUserId(req.params.userid, (err, results) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found job with userid ${req.params.userid}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Error retrieving job with userid " + req.params.userid,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: results,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -137,17 +171,30 @@ exports.findUser = (req, res) => {
 exports.findAppliedUser = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.findAppliedUserById(req?.params?.id, (err, results) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: results,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.findAppliedUserById(req?.params?.id, (err, results) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found AppliedUser with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Error retrieving job with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: results,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -166,17 +213,30 @@ exports.findAppliedUser = (req, res) => {
 exports.findAllAppliedUser = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.findAllAppliedUserById(req, (err, results) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: results || [],
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.findAllAppliedUserById(req, (err, results) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found AppliedUser with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Error retrieving job with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: results || [],
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -195,18 +255,31 @@ exports.findAllAppliedUser = (req, res) => {
 exports.findJobByUser = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-  
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.findJobByUserId(req.params.id, (err, results) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: results,
+    const token = req.get("Authorization");
+
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.findJobByUserId(req.params.id, (err, results) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found AppliedUser with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Error retrieving job with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: results,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -233,13 +306,27 @@ exports.update = (req, res) => {
   }
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.updateById(req.params.id, new Jobs(req.body), (err, data) => {
-      res.send(data);
-    });
-  }
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.updateById(req.params.id, new Jobs(req.body), (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              error: `Not found job with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              error: "Error updating job with id " + req.params.id,
+            });
+          }
+        } else res.send({
+          status: 200,
+          error: null,
+          response: data,
+        });
+      });
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -257,18 +344,31 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-     
-      if (verified) {
-    Jobs.remove(req.params.id, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        message: `job was deleted successfully!`,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+
+    if (verified) {
+      Jobs.remove(req.params.id, (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found job with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Could not delete job with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            message: `job was deleted successfully!`,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -288,17 +388,24 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    Jobs.removeAll((err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        message: `All jobs were deleted successfully!`,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      Jobs.removeAll((err, data) => {
+        if (err)
+          res.status(500).send({
+            status: 500,
+            error:
+              err.message || "Some error occurred while removing all jobs.",
+          });
+        else
+          res.send({
+            status: 200,
+            error: null,
+            message: `All jobs were deleted successfully!`,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     res.status(500).send({
       status: 500,

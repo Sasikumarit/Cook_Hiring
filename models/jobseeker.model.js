@@ -25,7 +25,7 @@ Jobseeker.create = (newJobseeker, result) => {
 };
 
 Jobseeker.findById = (id, result) => {
-  sql.query(`SELECT row_number() over(order by id) as sno,* FROM job_seeker WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM job_seeker WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -33,7 +33,6 @@ Jobseeker.findById = (id, result) => {
     }
 
     if (res.length) {
-      //console.log("found jobseeker: ", res[0]);
       result(null, res[0]);
       return;
     }
@@ -115,10 +114,10 @@ Jobseeker.findAllAppliedCandidateById = (id, result) => {
 
 
 Jobseeker.getAll = (id, result) => {
-  let query = "SELECT row_number() over(order by id) as sno,* FROM job_seeker";
+  let query = "SELECT row_number() over(order by js.id) as sno,js.* FROM job_seeker js";
 
   if (id) {
-    query += ` WHERE id '%${id}%'`;
+    query += ` WHERE js.id '%${id}%'`;
   }
 
   sql.query(query, (err, res) => {

@@ -24,15 +24,12 @@ Jobs.create = (newJob, result) => {
 };
 
 Jobs.findById = (id, result) => {
-  sql.query(`SELECT row_number() over(order by id) as sno,* FROM jobs WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM jobs WHERE id = ${id}`, (err, res) => {
     if (err) {
-      // console.log("error: ", err);
       result(err, null);
       return;
     }
-
     if (res.length) {
-      //console.log("found job: ", res[0]);
       result(null, res[0]);
       return;
     }

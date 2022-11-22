@@ -24,11 +24,17 @@ exports.create = (req, res) => {
   try {
     // Save User in the database
     User.create(user, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: "Created Successfully",
-      });
+      if (err)
+        res.status(500).send({
+          status: 500,
+          error: err.message || "Some error occurred while creating the User.",
+        });
+      else
+        res.send({
+          status: 200,
+          error: null,
+          response: "Created Successfully",
+        });
     });
   } catch (err) {
     res.status(500).send({
@@ -43,17 +49,23 @@ exports.findAll = (req, res) => {
   const email = req.query.email;
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    User.getAll(email, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        response: data,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      User.getAll(email, (err, data) => {
+        if (err)
+          res.status(500).send({
+            status: 500,
+            error: err.message || "Some error occurred while retrieving users.",
+          });
+        else
+          res.send({
+            status: 200,
+            error: null,
+            response: data,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     res.status(500).send({
       status: 500,
@@ -66,22 +78,36 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   try {
     User.findById(req.params.id, (err, results) => {
-      if (results.length !== 0) {
-        let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        let data = {
-          time: Date(),
-          id: results.id,
-        };
-        const token = jwt.sign(data, jwtSecretKey);
-        res.send({
-          status: 200,
-          error: null,
-          response: { ...results, token: token },
-        });
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            status: 404,
+            error: `Not found User with id ${req.params.id}.`,
+          });
+        } else {
+          res.status(500).send({
+            status: 500,
+            error: "Error retrieving User with id " + req.params.id,
+          });
+        }
       } else {
-        return res
-          .status(404)
-          .send({ status: 404, error: "Please Check Email and Password." });
+        if (results.length !== 0) {
+          let jwtSecretKey = process.env.JWT_SECRET_KEY;
+          let data = {
+            time: Date(),
+            id: results.id,
+          };
+          const token = jwt.sign(data, jwtSecretKey);
+          res.send({
+            status: 200,
+            error: null,
+            response: { ...results, token: token },
+          });
+        } else {
+          return res
+            .status(404)
+            .send({ status: 404, error: "Please Check Email and Password." });
+        }
       }
     });
   } catch (err) {
@@ -103,22 +129,36 @@ exports.findOne = (req, res) => {
 exports.findLoginUser = (req, res) => {
   try {
     User.findLogin(req.body.email, req.body.password, (err, results) => {
-      if (results.length !== 0) {
-        let jwtSecretKey = process.env.JWT_SECRET_KEY;
-        let data = {
-          time: Date(),
-          id: results.id,
-        };
-        const token = jwt.sign(data, jwtSecretKey);
-        res.send({
-          status: 200,
-          error: null,
-          response: { ...results, token: token },
-        });
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            status: 404,
+            error: `Not found User with id ${req.params.id}.`,
+          });
+        } else {
+          res.status(500).send({
+            status: 500,
+            error: "Error retrieving User with id " + req.params.id,
+          });
+        }
       } else {
-        return res
-          .status(404)
-          .send({ status: 404, error: "Please Check Email and Password." });
+        if (results.length !== 0) {
+          let jwtSecretKey = process.env.JWT_SECRET_KEY;
+          let data = {
+            time: Date(),
+            id: results.id,
+          };
+          const token = jwt.sign(data, jwtSecretKey);
+          res.send({
+            status: 200,
+            error: null,
+            response: { ...results, token: token },
+          });
+        } else {
+          return res
+            .status(404)
+            .send({ status: 404, error: "Please Check Email and Password." });
+        }
       }
     });
   } catch (err) {
@@ -148,13 +188,28 @@ exports.update = (req, res) => {
 
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    User.updateById(req.params.id, new User(req.body), (err, data) => {
-      res.send(data);
-    });
-  }
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      User.updateById(req.params.id, new User(req.body), (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              error: `Not found User with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              error: "Error updating User with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            response: data,
+          });
+      });
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -172,17 +227,30 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    User.remove(req.params.id, (err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        message: `User was deleted successfully!`,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      User.remove(req.params.id, (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              status: 404,
+              error: `Not found User with id ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              status: 500,
+              error: "Could not delete User with id " + req.params.id,
+            });
+          }
+        } else
+          res.send({
+            status: 200,
+            error: null,
+            message: `User was deleted successfully!`,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
@@ -202,17 +270,24 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const token = req.get('Authorization');
-      const verified = jwt.verify(token, jwtSecretKey);
-      if (verified) {
-    User.removeAll((err, data) => {
-      res.send({
-        status: 200,
-        error: null,
-        message: `All Users were deleted successfully!`,
+    const token = req.get("Authorization");
+    const verified = jwt.verify(token, jwtSecretKey);
+    if (verified) {
+      User.removeAll((err, data) => {
+        if (err)
+          res.status(500).send({
+            status: 500,
+            error:
+              err.message || "Some error occurred while removing all users.",
+          });
+        else
+          res.send({
+            status: 200,
+            error: null,
+            message: `All Users were deleted successfully!`,
+          });
       });
-    });
-  }
+    }
   } catch (err) {
     res.status(500).send({
       status: 500,
